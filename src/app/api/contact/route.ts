@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const WEB3FORMS_URL = "https://api.web3forms.com/submit";
+const WEB3FORMS_SUBMIT_URL = "https://api.web3forms.com/submit";
 
 const MAX = {
   name: 120,
   email: 254,
-  topic: 200,
+  subject: 200,
   message: 5000,
 } as const;
 
@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
 
   const name = typeof b.name === "string" ? b.name.trim() : "";
   const email = typeof b.email === "string" ? b.email.trim() : "";
-  const topic = typeof b.topic === "string" ? b.topic.trim() : "";
+  const subject = typeof b.subject === "string" ? b.subject.trim() : "";
   const message = typeof b.message === "string" ? b.message.trim() : "";
 
   if (!name || name.length > MAX.name) {
@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
   if (!email || email.length > MAX.email || !isValidEmail(email)) {
     return NextResponse.json({ success: false, message: "Please enter a valid email." }, { status: 400 });
   }
-  if (!topic || topic.length > MAX.topic) {
+  if (!subject || subject.length > MAX.subject) {
     return NextResponse.json({ success: false, message: "Please enter a subject." }, { status: 400 });
   }
   if (message.length < 10 || message.length > MAX.message) {
@@ -64,11 +64,11 @@ export async function POST(req: NextRequest) {
   formData.append("access_key", accessKey);
   formData.append("name", name);
   formData.append("email", email);
-  formData.append("subject", `Portfolio contact: ${topic}`);
+  formData.append("subject", subject);
   formData.append("message", message);
 
   try {
-    const res = await fetch(WEB3FORMS_URL, { method: "POST", body: formData });
+    const res = await fetch(WEB3FORMS_SUBMIT_URL, { method: "POST", body: formData });
     const data = (await res.json()) as { success?: boolean; message?: string };
 
     if (data.success) {
@@ -76,11 +76,11 @@ export async function POST(req: NextRequest) {
     }
 
     const msg =
-      data.message && data.message.length < 160 ? data.message : "Could not send message. Try again later.";
+      data.message && data.message.length < 160 ? data.message : "Failed to send message.";
     return NextResponse.json({ success: false, message: msg }, { status: 502 });
   } catch {
     return NextResponse.json(
-      { success: false, message: "Network error while contacting the mail service." },
+      { success: false, message: "Failed to send message." },
       { status: 502 }
     );
   }

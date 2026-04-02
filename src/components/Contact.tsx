@@ -27,7 +27,7 @@ export default function Contact() {
 
     const name = (form.elements.namedItem("name") as HTMLInputElement)?.value ?? "";
     const email = (form.elements.namedItem("email") as HTMLInputElement)?.value ?? "";
-    const topic = (form.elements.namedItem("topic") as HTMLInputElement)?.value ?? "";
+    const subject = (form.elements.namedItem("subject") as HTMLInputElement)?.value ?? "";
     const message = (form.elements.namedItem("message") as HTMLTextAreaElement)?.value ?? "";
     const honey = (form.elements.namedItem("_honey") as HTMLInputElement)?.value ?? "";
 
@@ -42,24 +42,32 @@ export default function Contact() {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, topic, message, _honey: honey }),
+        body: JSON.stringify({ name, email, subject, message, _honey: honey }),
       });
-      const data = (await res.json()) as { success?: boolean; message?: string };
+
+      let data: { success?: boolean; message?: string } = {};
+      try {
+        data = (await res.json()) as { success?: boolean; message?: string };
+      } catch {
+        setNotice("Failed to send message");
+        setStatus("error");
+        setTimeout(() => setStatus("idle"), 4000);
+        return;
+      }
 
       if (res.ok && data.success) {
         lastSubmitAt.current = Date.now();
         setStatus("sent");
         form.reset();
+      } else if (res.status === 400 && data.message && data.message.length < 160) {
+        setNotice(data.message);
+        setStatus("error");
       } else {
-        setNotice(
-          data.message && data.message.length < 160
-            ? data.message
-            : "Could not send. Please try again or email directly."
-        );
+        setNotice("Failed to send message");
         setStatus("error");
       }
     } catch {
-      setNotice("Network error. Check your connection and try again.");
+      setNotice("Failed to send message");
       setStatus("error");
     }
     setTimeout(() => setStatus("idle"), 4000);
@@ -172,10 +180,10 @@ export default function Contact() {
                 </div>
               </div>
               <div>
-                <label htmlFor="topic" className="block text-sm mb-2" style={{ color: "var(--text-muted)" }}>Subject</label>
+                <label htmlFor="subject" className="block text-sm mb-2" style={{ color: "var(--text-muted)" }}>Subject</label>
                 <input
-                  id="topic"
-                  name="topic"
+                  id="subject"
+                  name="subject"
                   type="text"
                   required
                   minLength={1}
@@ -207,7 +215,7 @@ export default function Contact() {
               <button type="submit" disabled={status === "sending"} className="w-full group inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-medium bg-accent text-white hover:bg-accent-hover transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:hover:scale-100 shadow-md hover:shadow-lg">
                 {status === "sending" && <><Loader2 className="w-5 h-5 animate-spin" />Sending...</>}
                 {status === "sent" && <><CheckCircle className="w-5 h-5" />Message Sent!</>}
-                {status === "error" && <><AlertCircle className="w-5 h-5" />Failed. Try again</>}
+                {status === "error" && <><AlertCircle className="w-5 h-5" />Failed to send message</>}
                 {status === "idle" && <><Send className="w-5 h-5 group-hover:translate-x-1 transition-transform" />Send Message</>}
               </button>
             </form>
