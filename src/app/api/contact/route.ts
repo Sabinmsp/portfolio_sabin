@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 
+/** Must match Vercel / .env.local exactly (server-only, never NEXT_PUBLIC_). */
+const ENV_ACCESS_KEY = "WEB3FORMS_ACCESS_KEY";
+
 const WEB3FORMS_SUBMIT_URL = "https://api.web3forms.com/submit";
 
 const MAX = {
@@ -13,14 +16,38 @@ function isValidEmail(s: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
 }
 
+/** Web3Forms may return `message` at top level or under `body`. */
+function extractWeb3Message(raw: Record<string, unknown>): string | undefined {
+  if (typeof raw.message === "string") return raw.message;
+  const body = raw.body;
+  if (body && typeof body === "object" && body !== null && "message" in body) {
+    const m = (body as { message?: unknown }).message;
+    if (typeof m === "string") return m;
+  }
+  return undefined;
+}
+
+function isWeb3Success(raw: Record<string, unknown>): boolean {
+  return raw.success === true;
+}
+
 export async function POST(req: NextRequest) {
-  const accessKey = process.env.WEB3FORMS_ACCESS_KEY?.trim();
+  const accessKey = process.env[ENV_ACCESS_KEY]?.trim();
+
   if (!accessKey) {
+    console.error(
+      `[contact] Missing env: ${ENV_ACCESS_KEY} is not set (check Vercel Project → Settings → Environment Variables)`
+    );
     return NextResponse.json(
-      { success: false, message: "Contact is not configured on the server." },
+      {
+        success: false,
+        message: `Server misconfiguration: ${ENV_ACCESS_KEY} is not set. Add it in Vercel and redeploy.`,
+      },
       { status: 503 }
     );
   }
+
+  console.log(`[contact] ${ENV_ACCESS_KEY} is configured (secret not logged)`);
 
   let body: unknown;
   try {
@@ -60,28 +87,72 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const formData = new FormData();
-  formData.append("access_key", accessKey);
-  formData.append("name", name);
-  formData.append("email", email);
-  formData.append("subject", subject);
-  formData.append("message", message);
+  const web3Payload = {
+    access_key: accessKey,
+    name,
+    email,
+    subject,
+    message,
+  };
 
+  let upstream: Response;
   try {
-    const res = await fetch(WEB3FORMS_SUBMIT_URL, { method: "POST", body: formData });
-    const data = (await res.json()) as { success?: boolean; message?: string };
-
-    if (data.success) {
-      return NextResponse.json({ success: true });
-    }
-
-    const msg =
-      data.message && data.message.length < 160 ? data.message : "Failed to send message.";
-    return NextResponse.json({ success: false, message: msg }, { status: 502 });
-  } catch {
+    upstream = await fetch(WEB3FORMS_SUBMIT_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(web3Payload),
+    });
+  } catch (err) {
+    console.error("[contact] Fetch to Web3Forms failed:", err instanceof Error ? err.message : String(err));
     return NextResponse.json(
-      { success: false, message: "Failed to send message." },
+      { success: false, message: "Failed to reach mail service." },
       { status: 502 }
     );
   }
+
+  const responseText = await upstream.text();
+  let raw: Record<string, unknown>;
+  try {
+    raw = JSON.parse(responseText) as Record<string, unknown>;
+  } catch {
+    console.error("[contact] Web3Forms non-JSON response", {
+      httpStatus: upstream.status,
+      contentType: upstream.headers.get("content-type"),
+      preview: responseText.slice(0, 200),
+    });
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Mail service returned an unexpected response.",
+        web3forms: { rawPreview: responseText.slice(0, 500) },
+      },
+      { status: 502 }
+    );
+  }
+
+  console.log("[contact] Web3Forms response", {
+    httpStatus: upstream.status,
+    ok: upstream.ok,
+    successField: raw.success,
+    keys: Object.keys(raw),
+  });
+
+  if (upstream.ok && isWeb3Success(raw)) {
+    return NextResponse.json({ success: true });
+  }
+
+  const msg = extractWeb3Message(raw) ?? "Failed to send message.";
+  const statusOut = upstream.status >= 400 ? upstream.status : 502;
+
+  return NextResponse.json(
+    {
+      success: false,
+      message: msg,
+      web3forms: raw,
+    },
+    { status: statusOut }
+  );
 }

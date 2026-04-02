@@ -45,9 +45,9 @@ export default function Contact() {
         body: JSON.stringify({ name, email, subject, message, _honey: honey }),
       });
 
-      let data: { success?: boolean; message?: string } = {};
+      let data: { success?: boolean; message?: string; web3forms?: unknown } = {};
       try {
-        data = (await res.json()) as { success?: boolean; message?: string };
+        data = (await res.json()) as { success?: boolean; message?: string; web3forms?: unknown };
       } catch {
         setNotice("Failed to send message");
         setStatus("error");
@@ -59,11 +59,9 @@ export default function Contact() {
         lastSubmitAt.current = Date.now();
         setStatus("sent");
         form.reset();
-      } else if (res.status === 400 && data.message && data.message.length < 160) {
-        setNotice(data.message);
-        setStatus("error");
       } else {
-        setNotice("Failed to send message");
+        const msg = typeof data.message === "string" ? data.message.trim() : "";
+        setNotice(msg.length > 0 && msg.length < 280 ? msg : "Failed to send message");
         setStatus("error");
       }
     } catch {
