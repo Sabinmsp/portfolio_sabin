@@ -28,7 +28,7 @@ function extractWeb3Message(raw: Record<string, unknown>): string | undefined {
 }
 
 function isWeb3Success(raw: Record<string, unknown>): boolean {
-  return raw.success === true;
+  return raw.success === true || raw.success === "true";
 }
 
 export async function POST(req: NextRequest) {

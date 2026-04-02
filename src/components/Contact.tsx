@@ -5,6 +5,7 @@ import { useRef, useState, useCallback } from "react";
 import { Send, Mail, MapPin, Phone, CheckCircle, Loader2, AlertCircle } from "lucide-react";
 
 const CLIENT_COOLDOWN_MS = 45_000;
+const FETCH_TIMEOUT_MS = 30_000;
 
 export default function Contact() {
   const ref = useRef(null);
@@ -38,12 +39,18 @@ export default function Contact() {
       return;
     }
 
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, subject, message, _honey: honey }),
+        signal: controller.signal,
       });
+
+      window.clearTimeout(timeoutId);
 
       let data: { success?: boolean; message?: string; web3forms?: unknown } = {};
       try {
@@ -55,7 +62,7 @@ export default function Contact() {
         return;
       }
 
-      if (res.ok && data.success) {
+      if (res.ok && data.success === true) {
         lastSubmitAt.current = Date.now();
         setStatus("sent");
         form.reset();
@@ -64,8 +71,13 @@ export default function Contact() {
         setNotice(msg.length > 0 && msg.length < 280 ? msg : "Failed to send message");
         setStatus("error");
       }
-    } catch {
-      setNotice("Failed to send message");
+    } catch (err) {
+      window.clearTimeout(timeoutId);
+      if (err instanceof Error && err.name === "AbortError") {
+        setNotice("Request timed out. Please try again.");
+      } else {
+        setNotice("Failed to send message");
+      }
       setStatus("error");
     }
     setTimeout(() => setStatus("idle"), 4000);
@@ -137,15 +149,16 @@ export default function Contact() {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="md:col-span-3"
           >
-            <form onSubmit={handleSubmit} className="card rounded-2xl p-5 md:p-8 space-y-5 md:space-y-6">
-              {/* Honeypot: leave empty (bots often fill it) */}
+            <form onSubmit={handleSubmit} className="relative card rounded-2xl p-5 md:p-8 space-y-5 md:space-y-6">
+              {/* Honeypot: off-screen so it never overlaps the submit button */}
               <input
                 type="text"
                 name="_honey"
                 tabIndex={-1}
                 autoComplete="off"
                 aria-hidden="true"
-                className="absolute opacity-0 w-px h-px overflow-hidden pointer-events-none"
+                className="fixed w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap border-0"
+                style={{ left: "-9999px", top: 0 }}
                 defaultValue=""
               />
               <div className="grid sm:grid-cols-2 gap-6">
@@ -197,10 +210,10 @@ export default function Contact() {
                   id="message"
                   name="message"
                   required
-                  minLength={10}
+                  minLength={1}
                   maxLength={5000}
                   rows={5}
-                  placeholder="Tell me about your project or idea..."
+                  placeholder="Tell me about your project or idea (10+ characters)..."
                   className="w-full px-4 py-3 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-accent/50 transition-all resize-none"
                   style={{ background: "var(--bg)", border: "1px solid var(--border)", color: "var(--text)" }}
                 />
@@ -210,11 +223,32 @@ export default function Contact() {
                   {notice}
                 </p>
               )}
-              <button type="submit" disabled={status === "sending"} className="w-full group inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-medium bg-accent text-white hover:bg-accent-hover transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:hover:scale-100 shadow-md hover:shadow-lg">
-                {status === "sending" && <><Loader2 className="w-5 h-5 animate-spin" />Sending...</>}
-                {status === "sent" && <><CheckCircle className="w-5 h-5" />Message Sent!</>}
-                {status === "error" && <><AlertCircle className="w-5 h-5" />Failed to send message</>}
-                {status === "idle" && <><Send className="w-5 h-5 group-hover:translate-x-1 transition-transform" />Send Message</>}
+              <button
+                type="submit"
+                disabled={status === "sending"}
+                className="w-full group inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-medium bg-accent text-white hover:bg-accent-hover transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:hover:scale-100 shadow-md hover:shadow-lg"
+              >
+                {status === "sending" ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    Sending...
+                  </>
+                ) : status === "sent" ? (
+                  <>
+                    <CheckCircle className="w-5 h-5" />
+                    Message Sent!
+                  </>
+                ) : status === "error" ? (
+                  <>
+                    <AlertCircle className="w-5 h-5" />
+                    Failed to send message
+                  </>
+                ) : (
+                  <>
+                    <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    Send Message
+                  </>
+                )}
               </button>
             </form>
           </motion.div>
