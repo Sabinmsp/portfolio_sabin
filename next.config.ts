@@ -2,18 +2,11 @@ import type { NextConfig } from "next";
 
 const isProd = process.env.NODE_ENV === "production";
 
-const productionCsp = [
-  "default-src 'self'",
-  "script-src 'self'",
-  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-  "font-src 'self' https://fonts.gstatic.com data:",
-  "img-src 'self' data: blob:",
-  "connect-src 'self'",
-  "frame-ancestors 'none'",
-  "base-uri 'self'",
-  "form-action 'self'",
-  "upgrade-insecure-requests",
-].join("; ");
+/**
+ * Custom CSP was removed: a strict `script-src 'self'` blocked Next.js inline
+ * scripts in production (blank page / console CSP errors). Reintroduce CSP with
+ * nonces or `'unsafe-inline'`/`'strict-dynamic'` if you need it again.
+ */
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
@@ -36,7 +29,6 @@ const nextConfig: NextConfig = {
             key: "Strict-Transport-Security",
             value: "max-age=63072000; includeSubDomains; preload",
           },
-          { key: "Content-Security-Policy", value: productionCsp },
         ]
       : [];
 
