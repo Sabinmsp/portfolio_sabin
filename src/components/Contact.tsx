@@ -4,8 +4,19 @@ import { motion, useInView } from "framer-motion";
 import { useRef, useState, useCallback } from "react";
 import { Send, Mail, MapPin, Phone, CheckCircle, Loader2, AlertCircle } from "lucide-react";
 
+const WEB3FORMS_SUBMIT_URL = "https://api.web3forms.com/submit";
 const CLIENT_COOLDOWN_MS = 45_000;
 const FETCH_TIMEOUT_MS = 30_000;
+
+function web3Message(data: Record<string, unknown>): string {
+  if (typeof data.message === "string") return data.message;
+  const body = data.body;
+  if (body && typeof body === "object" && body !== null && "message" in body) {
+    const m = (body as { message?: unknown }).message;
+    if (typeof m === "string") return m;
+  }
+  return "";
+}
 
 export default function Contact() {
   const ref = useRef(null);
@@ -20,6 +31,14 @@ export default function Contact() {
     if (now - lastSubmitAt.current < CLIENT_COOLDOWN_MS) {
       setNotice("Please wait a moment before sending again.");
       setTimeout(() => setNotice(null), 4000);
+      return;
+    }
+
+    const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY?.trim();
+    if (!accessKey) {
+      setNotice("Contact form is not configured (missing NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY).");
+      setStatus("error");
+      setTimeout(() => setStatus("idle"), 4000);
       return;
     }
 
@@ -39,22 +58,38 @@ export default function Contact() {
       return;
     }
 
+    if (message.trim().length < 10) {
+      setNotice("Message must be at least 10 characters.");
+      setStatus("error");
+      setTimeout(() => setStatus("idle"), 4000);
+      return;
+    }
+
     const controller = new AbortController();
     const timeoutId = window.setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
 
     try {
-      const res = await fetch("/api/contact", {
+      const res = await fetch(WEB3FORMS_SUBMIT_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, subject, message, _honey: honey }),
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          access_key: accessKey,
+          name,
+          email,
+          subject,
+          message,
+        }),
         signal: controller.signal,
       });
 
       window.clearTimeout(timeoutId);
 
-      let data: { success?: boolean; message?: string; web3forms?: unknown } = {};
+      let data: Record<string, unknown> = {};
       try {
-        data = (await res.json()) as { success?: boolean; message?: string; web3forms?: unknown };
+        data = (await res.json()) as Record<string, unknown>;
       } catch {
         setNotice("Failed to send message");
         setStatus("error");
@@ -67,7 +102,7 @@ export default function Contact() {
         setStatus("sent");
         form.reset();
       } else {
-        const msg = typeof data.message === "string" ? data.message.trim() : "";
+        const msg = web3Message(data);
         setNotice(msg.length > 0 && msg.length < 280 ? msg : "Failed to send message");
         setStatus("error");
       }

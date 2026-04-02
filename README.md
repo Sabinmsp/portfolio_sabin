@@ -11,7 +11,7 @@ A minimal, professional portfolio built with Next.js 15 (App Router), TypeScript
 | **Styling** | Tailwind CSS 4 | Utility-first CSS, theme variables |
 | **Animations** | Framer Motion | Scroll and entrance animations |
 | **Icons** | Lucide React | Icon set |
-| **Contact** | Web3Forms via `/api/contact` | Server-side key; see env notes below |
+| **Contact** | Web3Forms (browser `fetch`) | Public access key; see env notes below |
 | **Deployment** | Vercel | Recommended host |
 
 ## Project layout
@@ -19,7 +19,6 @@ A minimal, professional portfolio built with Next.js 15 (App Router), TypeScript
 ```
 src/
 ├── app/
-│   ├── api/contact/route.ts
 │   ├── layout.tsx
 │   ├── page.tsx
 │   └── globals.css
@@ -42,7 +41,7 @@ src/
 cd portfolio
 npm install
 cp .env.example .env.local
-# Edit .env.local: set WEB3FORMS_ACCESS_KEY (same value as your Web3Forms dashboard key)
+# Edit .env.local: set NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY (your Web3Forms access key)
 npm run dev
 ```
 
@@ -52,9 +51,9 @@ Open [http://localhost:3000](http://localhost:3000).
 
 | Variable | Required | Notes |
 |----------|----------|--------|
-| `WEB3FORMS_ACCESS_KEY` | Yes (contact form) | Web3Forms access key. **Server-only** — not exposed to the browser. Set in Vercel → Project → Settings → Environment Variables. Never commit `.env.local`. Restrict the key to your production domain in the [Web3Forms](https://web3forms.com) dashboard when possible. |
+| `NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY` | Yes (contact form) | Web3Forms access key. Inlined at build time (required so the browser can POST directly to `https://api.web3forms.com/submit` and avoid server-side Cloudflare blocks). Set in Vercel → Environment Variables. Never commit `.env.local`. Restrict the key to your production domain in the [Web3Forms](https://web3forms.com) dashboard when possible. |
 
-The contact form POSTs JSON to **`/api/contact`**; the Route Handler forwards to Web3Forms with the secret key.
+The contact form POSTs JSON from the **browser** to Web3Forms (same approach as their official JS examples).
 
 ## Build
 
@@ -65,13 +64,12 @@ npm start   # optional local production check
 
 ## Security & deployment notes
 
-- The Web3Forms key stays on the server (`WEB3FORMS_ACCESS_KEY`); the browser only talks to same-origin `/api/contact`.
-- Production CSP uses `connect-src 'self'` for fetches from the client bundle.
+- Web3Forms access keys are intended to be used from public forms; still restrict by domain in the Web3Forms dashboard.
 - Other security headers remain (see `next.config.ts`).
 - Keep `.env.local` out of git (see `.gitignore`).
 
 ## Deploy on Vercel
 
 1. Push this folder as the **repository root** (Option A) and **Import Project** in Vercel (Framework Preset: Next.js).
-2. **Environment variables:** add `WEB3FORMS_ACCESS_KEY` for Production (and Preview if you test the form there). No `NEXT_PUBLIC_` prefix needed.
-3. Redeploy after adding or changing env vars.
+2. **Environment variables:** add **`NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY`** for Production (and Preview if you test the form there). Remove legacy `WEB3FORMS_ACCESS_KEY` if you no longer use it.
+3. Redeploy after adding or changing env vars so the key is baked into the client bundle.
