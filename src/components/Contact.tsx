@@ -2,7 +2,7 @@
 
 import { motion, useInView } from "framer-motion";
 import { useRef, useState, useCallback } from "react";
-import { Send, Mail, MapPin, Phone, CheckCircle, Loader2, AlertCircle } from "lucide-react";
+import { Send, Mail, CheckCircle, Loader2, AlertCircle } from "lucide-react";
 
 const WEB3FORMS_SUBMIT_URL = "https://api.web3forms.com/submit";
 const CLIENT_COOLDOWN_MS = 45_000;
@@ -20,274 +20,328 @@ function web3Message(data: Record<string, unknown>): string {
 
 export default function Contact() {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const isInView = useInView(ref, { once: true, margin: "-80px" });
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
+    "idle"
+  );
   const [notice, setNotice] = useState<string | null>(null);
   const lastSubmitAt = useRef(0);
 
-  const handleSubmit = useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const now = Date.now();
-    if (now - lastSubmitAt.current < CLIENT_COOLDOWN_MS) {
-      setNotice("Please wait a moment before sending again.");
-      setTimeout(() => setNotice(null), 4000);
-      return;
-    }
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      const now = Date.now();
+      if (now - lastSubmitAt.current < CLIENT_COOLDOWN_MS) {
+        setNotice("Please wait a moment before sending again.");
+        setTimeout(() => setNotice(null), 4000);
+        return;
+      }
 
-    const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY?.trim();
-    if (!accessKey) {
-      setNotice("Contact form is not configured (missing NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY).");
-      setStatus("error");
-      setTimeout(() => setStatus("idle"), 4000);
-      return;
-    }
-
-    setStatus("sending");
-    const form = e.currentTarget;
-
-    const name = (form.elements.namedItem("name") as HTMLInputElement)?.value ?? "";
-    const email = (form.elements.namedItem("email") as HTMLInputElement)?.value ?? "";
-    const subject = (form.elements.namedItem("subject") as HTMLInputElement)?.value ?? "";
-    const message = (form.elements.namedItem("message") as HTMLTextAreaElement)?.value ?? "";
-    const honey = (form.elements.namedItem("_honey") as HTMLInputElement)?.value ?? "";
-
-    if (honey.trim().length > 0) {
-      setStatus("sent");
-      form.reset();
-      setTimeout(() => setStatus("idle"), 4000);
-      return;
-    }
-
-    if (message.trim().length < 10) {
-      setNotice("Message must be at least 10 characters.");
-      setStatus("error");
-      setTimeout(() => setStatus("idle"), 4000);
-      return;
-    }
-
-    const controller = new AbortController();
-    const timeoutId = window.setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
-
-    try {
-      const res = await fetch(WEB3FORMS_SUBMIT_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          access_key: accessKey,
-          name,
-          email,
-          subject,
-          message,
-        }),
-        signal: controller.signal,
-      });
-
-      window.clearTimeout(timeoutId);
-
-      let data: Record<string, unknown> = {};
-      try {
-        data = (await res.json()) as Record<string, unknown>;
-      } catch {
-        setNotice("Failed to send message");
+      const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY?.trim();
+      if (!accessKey) {
+        setNotice(
+          "Contact form is not configured (missing NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY)."
+        );
         setStatus("error");
         setTimeout(() => setStatus("idle"), 4000);
         return;
       }
 
-      if (res.ok && data.success === true) {
-        lastSubmitAt.current = Date.now();
+      setStatus("sending");
+      const form = e.currentTarget;
+
+      const name =
+        (form.elements.namedItem("name") as HTMLInputElement)?.value ?? "";
+      const email =
+        (form.elements.namedItem("email") as HTMLInputElement)?.value ?? "";
+      const subject =
+        (form.elements.namedItem("subject") as HTMLInputElement)?.value ?? "";
+      const message =
+        (form.elements.namedItem("message") as HTMLTextAreaElement)?.value ??
+        "";
+      const honey =
+        (form.elements.namedItem("_honey") as HTMLInputElement)?.value ?? "";
+
+      if (honey.trim().length > 0) {
         setStatus("sent");
         form.reset();
-      } else {
-        const msg = web3Message(data);
-        setNotice(msg.length > 0 && msg.length < 280 ? msg : "Failed to send message");
+        setTimeout(() => setStatus("idle"), 4000);
+        return;
+      }
+
+      if (message.trim().length < 10) {
+        setNotice("Message must be at least 10 characters.");
+        setStatus("error");
+        setTimeout(() => setStatus("idle"), 4000);
+        return;
+      }
+
+      const controller = new AbortController();
+      const timeoutId = window.setTimeout(
+        () => controller.abort(),
+        FETCH_TIMEOUT_MS
+      );
+
+      try {
+        const res = await fetch(WEB3FORMS_SUBMIT_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            access_key: accessKey,
+            name,
+            email,
+            subject,
+            message,
+          }),
+          signal: controller.signal,
+        });
+
+        window.clearTimeout(timeoutId);
+
+        let data: Record<string, unknown> = {};
+        try {
+          data = (await res.json()) as Record<string, unknown>;
+        } catch {
+          setNotice("Failed to send message");
+          setStatus("error");
+          setTimeout(() => setStatus("idle"), 4000);
+          return;
+        }
+
+        if (res.ok && data.success === true) {
+          lastSubmitAt.current = Date.now();
+          setStatus("sent");
+          form.reset();
+        } else {
+          const msg = web3Message(data);
+          setNotice(
+            msg.length > 0 && msg.length < 280 ? msg : "Failed to send message"
+          );
+          setStatus("error");
+        }
+      } catch (err) {
+        window.clearTimeout(timeoutId);
+        if (err instanceof Error && err.name === "AbortError") {
+          setNotice("Request timed out. Please try again.");
+        } else {
+          setNotice("Failed to send message");
+        }
         setStatus("error");
       }
-    } catch (err) {
-      window.clearTimeout(timeoutId);
-      if (err instanceof Error && err.name === "AbortError") {
-        setNotice("Request timed out. Please try again.");
-      } else {
-        setNotice("Failed to send message");
-      }
-      setStatus("error");
-    }
-    setTimeout(() => setStatus("idle"), 4000);
-  }, []);
+      setTimeout(() => setStatus("idle"), 4000);
+    },
+    []
+  );
+
+  const fieldClass =
+    "w-full px-3 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-accent/40 transition-colors";
+  const fieldStyle = {
+    background: "var(--bg)",
+    border: "1px solid var(--border)",
+    color: "var(--text)",
+    borderRadius: 4,
+  } as const;
 
   return (
-    <section id="contact" className="relative py-20 md:py-28 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 md:px-6" ref={ref}>
+    <section
+      id="contact"
+      className="section-y relative min-h-[min(100vh,720px)] flex items-center"
+    >
+      <div className="page-container w-full" ref={ref}>
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 10 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-12 md:mb-16"
+          transition={{ duration: 0.4 }}
+          className="grid gap-8 lg:grid-cols-[1fr_1.4fr] lg:gap-12 lg:items-start"
         >
-          <h2 className="text-3xl md:text-5xl font-bold" style={{ color: "var(--text-heading)" }}>
-            Let&apos;s Build <span className="text-accent pop-text">Something Real</span>
-          </h2>
-          <div className="mt-3 w-20 h-1 mx-auto rounded-full bg-accent" />
-          <p className="mt-4 max-w-xl mx-auto text-sm md:text-base" style={{ color: "var(--text-muted)" }}>
-            Open to AI engineering roles, collaborations, and building systems that create real impact.
-          </p>
-        </motion.div>
+          <div>
+            <h2 className="heading text-2xl md:text-3xl">Get in touch</h2>
+            <p
+              className="mt-2 text-sm leading-relaxed md:text-[15px]"
+              style={{ color: "var(--text-muted)" }}
+            >
+              Open to AI engineering roles and collaborations. Prefer email or
+              the form — I respond within a few days.
+            </p>
 
-        <div className="grid md:grid-cols-5 gap-10">
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="md:col-span-2 space-y-6"
-          >
-            <div className="card rounded-2xl p-6 space-y-6">
-              <h3 className="text-xl font-bold" style={{ color: "var(--text-heading)" }}>Let&apos;s Build Together</h3>
-              <p className="text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>
-                Looking to bring on an AI engineer who ships? I design and build intelligent systems from architecture through deployment.
-              </p>
-              <div className="space-y-4">
-                <a href="mailto:sabinmsp@gmail.com" className="flex items-center gap-3 hover:text-accent transition-colors group" style={{ color: "var(--text)" }}>
-                  <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center"><Mail className="w-5 h-5 text-accent" /></div>
-                  <span className="text-sm">sabinmsp@gmail.com</span>
+            <a
+              href="mailto:sabinmsp@gmail.com"
+              className="mt-5 inline-flex items-center gap-2 text-sm transition-colors hover:text-accent"
+              style={{ color: "var(--text-heading)" }}
+            >
+              <Mail className="h-4 w-4 text-accent" />
+              <span className="font-mono text-[13px]">sabinmsp@gmail.com</span>
+            </a>
+
+            <div className="mt-4 flex gap-3">
+              {[
+                { label: "GitHub", href: "https://github.com/Sabinmsp" },
+                {
+                  label: "LinkedIn",
+                  href: "https://www.linkedin.com/in/sabin-pradhan-652b333b6/",
+                },
+              ].map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="label-mono border px-2.5 py-1.5 transition-colors hover:border-[var(--border-hover)] hover:text-accent"
+                  style={{
+                    color: "var(--text-muted)",
+                    borderColor: "var(--border)",
+                    borderRadius: 3,
+                  }}
+                >
+                  {link.label}
                 </a>
-                <div className="flex items-center gap-3" style={{ color: "var(--text)" }}>
-                  <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center"><MapPin className="w-5 h-5 text-accent" /></div>
-                  <span className="text-sm">Available Worldwide</span>
-                </div>
-                <div className="flex items-center gap-3" style={{ color: "var(--text)" }}>
-                  <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center"><Phone className="w-5 h-5 text-accent" /></div>
-                  <span className="text-sm">Open to remote and on site</span>
-                </div>
-              </div>
+              ))}
             </div>
-            <div className="card rounded-2xl p-6">
-              <h4 className="text-sm font-semibold uppercase tracking-wider mb-4" style={{ color: "var(--text-muted)" }}>Find me on</h4>
-              <div className="flex gap-3">
-                {[
-                  { label: "GitHub", href: "https://github.com/Sabinmsp" },
-                  { label: "LinkedIn", href: "https://www.linkedin.com/in/sabin-pradhan-652b333b6/" },
-                ].map((link) => (
-                  <a key={link.label} href={link.href} target="_blank" rel="noopener noreferrer" className="px-4 py-2 text-xs rounded-full card hover:text-accent transition-all" style={{ color: "var(--text-muted)" }}>
-                    {link.label}
-                  </a>
-                ))}
-              </div>
-            </div>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="md:col-span-3"
+          <form
+            onSubmit={handleSubmit}
+            className="relative space-y-4 border p-5 md:p-6"
+            style={{
+              background: "var(--bg-card)",
+              borderColor: "var(--border)",
+              borderRadius: 4,
+            }}
           >
-            <form onSubmit={handleSubmit} className="relative card rounded-2xl p-5 md:p-8 space-y-5 md:space-y-6">
-              {/* Honeypot: off-screen so it never overlaps the submit button */}
-              <input
-                type="text"
-                name="_honey"
-                tabIndex={-1}
-                autoComplete="off"
-                aria-hidden="true"
-                className="fixed w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap border-0"
-                style={{ left: "-9999px", top: 0 }}
-                defaultValue=""
-              />
-              <div className="grid sm:grid-cols-2 gap-6">
-                <div>
-                  <label htmlFor="name" className="block text-sm mb-2" style={{ color: "var(--text-muted)" }}>Your Name</label>
-                  <input
-                    id="name"
-                    name="name"
-                    type="text"
-                    required
-                    minLength={1}
-                    maxLength={120}
-                    placeholder="John Doe"
-                    className="w-full px-4 py-3 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-accent/50 transition-all"
-                    style={{ background: "var(--bg)", border: "1px solid var(--border)", color: "var(--text)" }}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="email" className="block text-sm mb-2" style={{ color: "var(--text-muted)" }}>Your Email</label>
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    required
-                    maxLength={254}
-                    placeholder="john@company.com"
-                    className="w-full px-4 py-3 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-accent/50 transition-all"
-                    style={{ background: "var(--bg)", border: "1px solid var(--border)", color: "var(--text)" }}
-                  />
-                </div>
-              </div>
+            <input
+              type="text"
+              name="_honey"
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              className="fixed -m-px h-px w-px overflow-hidden whitespace-nowrap border-0 p-0"
+              style={{ left: "-9999px", top: 0 }}
+              defaultValue=""
+            />
+
+            <div className="grid gap-4 sm:grid-cols-2">
               <div>
-                <label htmlFor="subject" className="block text-sm mb-2" style={{ color: "var(--text-muted)" }}>Subject</label>
+                <label
+                  htmlFor="name"
+                  className="label-mono mb-1.5 block"
+                >
+                  Name
+                </label>
                 <input
-                  id="subject"
-                  name="subject"
+                  id="name"
+                  name="name"
                   type="text"
                   required
                   minLength={1}
-                  maxLength={200}
-                  placeholder="Let's build something together"
-                  className="w-full px-4 py-3 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-accent/50 transition-all"
-                  style={{ background: "var(--bg)", border: "1px solid var(--border)", color: "var(--text)" }}
+                  maxLength={120}
+                  placeholder="Your name"
+                  className={fieldClass}
+                  style={fieldStyle}
                 />
               </div>
               <div>
-                <label htmlFor="message" className="block text-sm mb-2" style={{ color: "var(--text-muted)" }}>Message</label>
-                <textarea
-                  id="message"
-                  name="message"
+                <label
+                  htmlFor="email"
+                  className="label-mono mb-1.5 block"
+                >
+                  Email
+                </label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
                   required
-                  minLength={1}
-                  maxLength={5000}
-                  rows={5}
-                  placeholder="Tell me about your project or idea (10+ characters)..."
-                  className="w-full px-4 py-3 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-accent/50 transition-all resize-none"
-                  style={{ background: "var(--bg)", border: "1px solid var(--border)", color: "var(--text)" }}
+                  maxLength={254}
+                  placeholder="you@company.com"
+                  className={fieldClass}
+                  style={fieldStyle}
                 />
               </div>
-              {notice && (
-                <p className="text-sm text-center" style={{ color: "var(--text-muted)" }} role="status">
-                  {notice}
-                </p>
-              )}
-              <button
-                type="submit"
-                disabled={status === "sending"}
-                className="w-full group inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-medium bg-accent text-white hover:bg-accent-hover transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:hover:scale-100 shadow-md hover:shadow-lg"
+            </div>
+
+            <div>
+              <label
+                htmlFor="subject"
+                className="label-mono mb-1.5 block"
               >
-                {status === "sending" ? (
-                  <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    Sending...
-                  </>
-                ) : status === "sent" ? (
-                  <>
-                    <CheckCircle className="w-5 h-5" />
-                    Message Sent!
-                  </>
-                ) : status === "error" ? (
-                  <>
-                    <AlertCircle className="w-5 h-5" />
-                    Failed to send message
-                  </>
-                ) : (
-                  <>
-                    <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                    Send Message
-                  </>
-                )}
-              </button>
-            </form>
-          </motion.div>
-        </div>
+                Subject
+              </label>
+              <input
+                id="subject"
+                name="subject"
+                type="text"
+                required
+                minLength={1}
+                maxLength={200}
+                placeholder="Role, project, or question"
+                className={fieldClass}
+                style={fieldStyle}
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="message"
+                className="label-mono mb-1.5 block"
+              >
+                Message
+              </label>
+              <textarea
+                id="message"
+                name="message"
+                required
+                minLength={1}
+                maxLength={5000}
+                rows={4}
+                placeholder="What are you building? (10+ characters)"
+                className={`${fieldClass} resize-none`}
+                style={fieldStyle}
+              />
+            </div>
+
+            {notice ? (
+              <p
+                className="text-center text-sm"
+                style={{ color: "var(--text-muted)" }}
+                role="status"
+              >
+                {notice}
+              </p>
+            ) : null}
+
+            <button
+              type="submit"
+              disabled={status === "sending"}
+              className="inline-flex w-full items-center justify-center gap-2 bg-accent px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent-hover disabled:opacity-70"
+              style={{ borderRadius: 4 }}
+            >
+              {status === "sending" ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Sending…
+                </>
+              ) : status === "sent" ? (
+                <>
+                  <CheckCircle className="h-4 w-4" />
+                  Sent
+                </>
+              ) : status === "error" ? (
+                <>
+                  <AlertCircle className="h-4 w-4" />
+                  Failed — try again
+                </>
+              ) : (
+                <>
+                  <Send className="h-4 w-4" />
+                  Send message
+                </>
+              )}
+            </button>
+          </form>
+        </motion.div>
       </div>
     </section>
   );
