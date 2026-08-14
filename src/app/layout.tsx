@@ -22,9 +22,9 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Sabin Pradhan | AI Engineer, Full Stack Developer",
+  title: "Sabin Pradhan | AI Engineer",
   description:
-    "Portfolio of Sabin Pradhan, AI engineer focused on RAG, LangChain, and modern full stack development.",
+    "Portfolio of Sabin Pradhan — CareerOS, Gym AI Coach, and an AI RC car simulator.",
 };
 
 export default function RootLayout({

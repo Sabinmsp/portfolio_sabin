@@ -14,57 +14,34 @@ interface EducationEntry {
 const projects: ProjectItem[] = [
   {
     year: "2026",
-    title: "Food_ai",
-    mockupImage: "/mockup-food-ai.png",
-    mockupUrl: "food-ai.app/dashboard",
-    techTags: ["React Native", "TypeScript", "FastAPI", "PostgreSQL"],
-    impact: [
-      { label: "surface", value: "intake + steps" },
-      { label: "ux", value: "guided daily flow" },
-      { label: "latency", value: "<200ms charts" },
-    ],
+    title: "CareerOS",
+    techTags: ["Next.js", "TypeScript", "FastAPI", "PostgreSQL", "Claude"],
     links: {
-      github: "https://github.com/Sabinmsp",
+      live: "https://careeros-lemon.vercel.app",
+      github: "https://github.com/Sabinmsp/careeros",
     },
-    bullets: [
-      "Nutrition and activity companion: calories, macros, and steps in one glanceable dashboard",
-      "Personalized greeting and weekly rhythm so tracking stays lightweight",
-      "Built for daily use: fast navigation, clear charts, flow that matches how people eat and move",
-    ],
-    systemOutput: `// GET /api/v1/nutrition/summary?day=today
-{
-  "calories": 1840,
-  "protein_g": 142,
-  "steps": 8742,
-  "status": "on_track"
-}`,
+    summary:
+      "AI employability tool. Paste a job description and it compares your resume evidence against the role, names the gaps, then turns them into a project and a seven-day plan.",
   },
   {
     year: "2026",
-    title: "Purpose AI",
-    mockupImage: "/mockup-purpose-ai.png",
-    mockupUrl: "purpose.ai/api/v1/plan",
-    techTags: ["Next.js", "FastAPI", "LangChain", "pgvector"],
-    impact: [
-      { label: "pattern", value: "RAG + agents" },
-      { label: "grounding", value: "retrieved docs" },
-      { label: "output", value: "actionable plans" },
-    ],
+    title: "Gym AI Coach",
+    techTags: ["Next.js", "TypeScript", "Tailwind", "RAG", "OpenAI"],
     links: {
-      github: "https://github.com/Sabinmsp",
+      github: "https://github.com/Sabinmsp/gym-ai-coach",
     },
-    bullets: [
-      "Purpose-driven assistant: users define intent and get structured plans instead of generic chat",
-      "Retrieval layer grounds responses in source content for consistent, relevant advice",
-      "End-to-end stack: clean API, responsive UI, prompts tuned for actionable output",
-    ],
-    systemOutput: `// POST /api/v1/retrieve  ·  top_k=4
-{
-  "query": "clarify Q2 goals",
-  "chunks": 4,
-  "avg_score": 0.84,
-  "model": "gpt-4o-mini"
-}`,
+    summary:
+      "iPhone-style fitness coach UI with a real Ask AI pipeline: retrieve fitness knowledge, answer from retrieved chunks only, and show the RAG steps in a debug panel.",
+  },
+  {
+    year: "2026",
+    title: "AI RC Car Simulator",
+    techTags: ["Python", "FastAPI", "WebSocket", "Ollama"],
+    links: {
+      github: "https://github.com/Sabinmsp/ai_rc_car_simulator",
+    },
+    summary:
+      "Local simulator for an AI-controlled RC car. Type a search command, watch a 2D room, and see the LLM pick safe actions over WebSocket. No hardware needed.",
   },
 ];
 
@@ -74,14 +51,14 @@ const education: EducationEntry[] = [
     title: "Master of IT, Artificial Intelligence",
     subtitle: "Charles Darwin University",
     detail:
-      "Applied AI: ML systems, agents, and production software. Shipping RAG pipelines alongside coursework.",
+      "Applied AI: ML systems, agents, and production software.",
   },
   {
     year: "2023 — 2025",
     title: "Bachelor of Information Technology",
     subtitle: "Victoria University",
     detail:
-      "Full-stack web and mobile, end to end — frontend, backend, databases, and system architecture.",
+      "Full-stack web and mobile — frontend, backend, databases, and system architecture.",
   },
 ];
 
@@ -99,13 +76,13 @@ export default function Experience() {
           transition={{ duration: 0.4 }}
           className="mb-8 md:mb-10"
         >
-          <h2 className="heading text-2xl md:text-3xl">Selected work</h2>
+          <h2 className="heading text-2xl md:text-3xl">Work</h2>
           <p
             className="mt-2 max-w-xl text-sm md:text-[15px]"
             style={{ color: "var(--text-muted)" }}
           >
-            Systems I&apos;ve designed and shipped, plus the academic foundation
-            behind them.
+            Three projects from GitHub — career matching, gym coaching, and an RC
+            car simulator.
           </p>
         </motion.div>
 
@@ -155,6 +132,7 @@ export default function Experience() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -6 }}
               transition={{ duration: 0.25 }}
+              className="grid gap-4 md:grid-cols-1 lg:grid-cols-3"
             >
               {projects.map((item, i) => (
                 <ProjectCard key={item.title} item={item} index={i} />

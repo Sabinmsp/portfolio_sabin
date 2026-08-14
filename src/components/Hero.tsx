@@ -5,12 +5,11 @@ import { ArrowDown, Download, Github, Linkedin, Mail } from "lucide-react";
 
 const STACK = [
   "Python",
-  "LangChain",
-  "RAG",
   "FastAPI",
   "Next.js",
   "TypeScript",
-  "pgvector",
+  "RAG",
+  "Ollama",
 ];
 
 export default function Hero() {
@@ -42,7 +41,7 @@ export default function Hero() {
               alt="Sabin Pradhan"
               width={44}
               height={44}
-              className="h-11 w-11 rounded-full object-cover object-[center_20%]"
+              className="h-11 w-11 rounded-full object-cover object-center"
               style={{ border: "1px solid var(--border)" }}
             />
             <div>
@@ -57,17 +56,16 @@ export default function Hero() {
           </div>
 
           <h1 className="heading text-3xl md:text-5xl lg:text-[3.25rem]">
-            I design and ship production AI systems — RAG, agents, and the APIs
-            that keep them honest.
+            I build applied AI apps — career matching, gym coaching, and robot
+            control.
           </h1>
 
           <p
             className="mt-5 max-w-2xl text-[15px] leading-relaxed md:text-base"
             style={{ color: "var(--text-muted)" }}
           >
-            End-to-end ownership from retrieval architecture through deployment.
-            Currently building applied AI systems while completing a Master of IT
-            (AI).
+            Master of IT (AI) student. I ship small, working systems: CareerOS,
+            Gym AI Coach, and an AI RC car simulator.
           </p>
 
           <p

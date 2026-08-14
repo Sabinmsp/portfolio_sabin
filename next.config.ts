@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import path from "path";
 
 const isProd = process.env.NODE_ENV === "production";
 
@@ -9,6 +10,7 @@ const isProd = process.env.NODE_ENV === "production";
  */
 
 const nextConfig: NextConfig = {
+  outputFileTracingRoot: path.join(__dirname),
   poweredByHeader: false,
   compress: true,
   async headers() {
