@@ -1,6 +1,6 @@
 # Sabin Pradhan: AI Engineer Portfolio
 
-A minimal, professional portfolio built with Next.js 15 (App Router), TypeScript, Tailwind CSS 4, and Framer Motion.
+A single page portfolio built with Next.js 15 (App Router), TypeScript, Tailwind CSS 4, and Framer Motion.
 
 ## Tech Stack
 
@@ -21,24 +21,51 @@ src/
 ├── app/
 │   ├── layout.tsx
 │   ├── page.tsx
-│   └── globals.css
+│   ├── icon.png        # favicon
+│   └── globals.css     # design tokens, type scale, ledger primitives
 ├── components/
 │   ├── Contact.tsx
-│   ├── Experience.tsx
+│   ├── Experience.tsx  # Work and Study sections
 │   ├── Footer.tsx
 │   ├── Hero.tsx
-│   ├── LoadingScreen.tsx
 │   ├── Navbar.tsx
-│   ├── ThemeProvider.tsx
-│   └── TiltCard.tsx
+│   ├── ProjectCard.tsx   # a ledger row
+│   ├── ProjectVisual.tsx # screenshot or pipeline diagram
+│   └── ThemeProvider.tsx
 └── public/
     ├── resume PDF, images, logos
 ```
 
+## Design system
+
+The layout is an index: numbered ledger rows separated by rules, no cards.
+Everything is driven by tokens in `globals.css`.
+
+- **Type scale.** Six steps (`--t-label` through `--t-numeral`), 15px floor,
+  17px body on mobile and 18px on desktop. Use the `.t-*` and `.meta` classes
+  rather than Tailwind `text-*` utilities so the scale stays closed.
+- **Color.** Dark is the primary design; light is a warm paper variant with its
+  own accent, not an inversion. Every text pairing is measured at 4.5:1 or
+  better, including against `--bg-inset`.
+- **Accent.** One filled action per context. Everything else is a ruled or
+  underlined link.
+- **Motion.** Entrance only, and every animation is disabled under
+  `prefers-reduced-motion: reduce`.
+
+## Project visuals
+
+`ProjectVisual` renders one of two kinds, set per project in `Experience.tsx`:
+
+- `kind: "flow"` draws the pipeline the project actually runs.
+- `kind: "shot"` renders a real screenshot (`src`, `alt`, `caption`).
+
+The `mockup-*.png` files in `public/` are stock product photos, not screenshots
+of these projects, so nothing references them. Drop a genuine screenshot into
+`public/` and switch that project to `kind: "shot"` when you have one.
+
 ## Setup
 
 ```bash
-cd portfolio
 npm install
 cp .env.example .env.local
 # Edit .env.local: set NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY (your Web3Forms access key)

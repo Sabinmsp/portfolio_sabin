@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
-import { motion, useInView, AnimatePresence } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import ProjectCard, { type ProjectItem } from "./ProjectCard";
 
 interface EducationEntry {
@@ -22,6 +21,17 @@ const projects: ProjectItem[] = [
     },
     summary:
       "AI employability tool. Paste a job description and it compares your resume evidence against the role, names the gaps, then turns them into a project and a seven-day plan.",
+    visual: {
+      kind: "flow",
+      input: "resume + job description",
+      steps: [
+        "match evidence to the role",
+        "name the gaps",
+        "return a project and a seven-day plan",
+      ],
+      output: "something to actually build",
+      caption: "Pipeline: evidence in, plan out.",
+    },
   },
   {
     year: "2026",
@@ -31,7 +41,18 @@ const projects: ProjectItem[] = [
       github: "https://github.com/Sabinmsp/gym-ai-coach",
     },
     summary:
-      "iPhone-style fitness coach UI with a real Ask AI pipeline: retrieve fitness knowledge, answer from retrieved chunks only, and show the RAG steps in a debug panel.",
+      "iPhone style fitness coach UI with a real Ask AI pipeline: retrieve fitness knowledge, answer from retrieved chunks only, and show every RAG step in a debug panel.",
+    visual: {
+      kind: "flow",
+      input: "a fitness question",
+      steps: [
+        "retrieve matching knowledge chunks",
+        "answer from those chunks only",
+        "log every step to the debug panel",
+      ],
+      output: "an answer you can trace",
+      caption: "Retrieval path, nothing hidden.",
+    },
   },
   {
     year: "2026",
@@ -41,136 +62,140 @@ const projects: ProjectItem[] = [
       github: "https://github.com/Sabinmsp/ai_rc_car_simulator",
     },
     summary:
-      "Local simulator for an AI-controlled RC car. Type a search command, watch a 2D room, and see the LLM pick safe actions over WebSocket. No hardware needed.",
+      "Local simulator for an AI controlled RC car. Type a search command, watch a 2D room, and see the LLM pick safe actions over a WebSocket. No hardware needed.",
+    visual: {
+      kind: "flow",
+      input: "typed search command",
+      steps: [
+        "local LLM reads the room state",
+        "picks a safe next action",
+        "streams it over the WebSocket",
+      ],
+      output: "car moves in the 2D room",
+      caption: "Control loop, no hardware in it.",
+    },
   },
 ];
 
 const education: EducationEntry[] = [
   {
-    year: "2026 — present",
+    year: "2026 to present",
     title: "Master of IT, Artificial Intelligence",
     subtitle: "Charles Darwin University",
-    detail:
-      "Applied AI: ML systems, agents, and production software.",
+    detail: "Applied AI: ML systems, agents, and production software.",
   },
   {
-    year: "2023 — 2025",
+    year: "2023 to 2025",
     title: "Bachelor of Information Technology",
     subtitle: "Victoria University",
     detail:
-      "Full-stack web and mobile — frontend, backend, databases, and system architecture.",
+      "Full-stack web and mobile: frontend, backend, databases, and system architecture.",
   },
 ];
 
-export default function Experience() {
-  const [tab, setTab] = useState<"systems" | "education">("systems");
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-60px" });
+function SectionHead({
+  index,
+  kicker,
+  title,
+  lead,
+}: {
+  index: string;
+  kicker: string;
+  title: string;
+  lead: string;
+}) {
+  const reduceMotion = useReducedMotion();
 
   return (
-    <section id="experience" className="section-y relative">
-      <div className="page-container" ref={ref}>
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.4 }}
-          className="mb-8 md:mb-10"
-        >
-          <h2 className="heading text-2xl md:text-3xl">Work</h2>
-          <p
-            className="mt-2 max-w-xl text-sm md:text-[15px]"
-            style={{ color: "var(--text-muted)" }}
-          >
-            Three projects from GitHub — career matching, gym coaching, and an RC
-            car simulator.
-          </p>
-        </motion.div>
+    <motion.header
+      initial={reduceMotion ? false : { opacity: 0, y: 14 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.5, ease: [0.2, 0.7, 0.3, 1] as const }}
+      className="mb-12 md:mb-16"
+    >
+      <p className="meta">
+        {index} / {kicker}
+      </p>
+      <h2 className="t-h2 mt-4">{title}</h2>
+      <p
+        className="t-lead mt-5 max-w-[48ch]"
+        style={{ color: "var(--text-muted)" }}
+      >
+        {lead}
+      </p>
+    </motion.header>
+  );
+}
 
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.35, delay: 0.08 }}
-          className="mb-8 flex gap-0 border-b"
-          style={{ borderColor: "var(--border)" }}
-          role="tablist"
-        >
-          {(
-            [
-              { key: "systems" as const, label: "Projects" },
-              { key: "education" as const, label: "Education" },
-            ] as const
-          ).map((t) => (
-            <button
-              key={t.key}
-              type="button"
-              role="tab"
-              aria-selected={tab === t.key}
-              onClick={() => setTab(t.key)}
-              className="relative px-4 py-2.5 text-sm font-medium transition-colors"
-              style={{
-                color:
-                  tab === t.key ? "var(--text-heading)" : "var(--text-muted)",
-              }}
-            >
-              {t.label}
-              {tab === t.key ? (
-                <motion.span
-                  layoutId="tab-underline"
-                  className="absolute inset-x-0 -bottom-px h-px bg-accent"
-                  transition={{ duration: 0.2, ease: "easeOut" }}
-                />
-              ) : null}
-            </button>
-          ))}
-        </motion.div>
+export default function Experience() {
+  const reduceMotion = useReducedMotion();
 
-        <AnimatePresence mode="wait">
-          {tab === "systems" ? (
-            <motion.div
-              key="projects"
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              transition={{ duration: 0.25 }}
-              className="grid gap-4 md:grid-cols-1 lg:grid-cols-3"
-            >
-              {projects.map((item, i) => (
-                <ProjectCard key={item.title} item={item} index={i} />
-              ))}
-            </motion.div>
-          ) : (
-            <motion.div
-              key="education"
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              transition={{ duration: 0.25 }}
-              className="divide-y"
-              style={{ borderColor: "var(--border)" }}
-            >
-              {education.map((item) => (
-                <div
-                  key={item.title}
-                  className="grid gap-1 py-5 first:pt-0 last:pb-0 sm:grid-cols-[140px_1fr] sm:gap-6"
-                  style={{ borderColor: "var(--border)" }}
-                >
-                  <p className="label-mono pt-1">{item.year}</p>
-                  <div>
-                    <h3 className="heading text-base md:text-lg">{item.title}</h3>
-                    <p className="mt-0.5 text-sm text-accent">{item.subtitle}</p>
-                    <p
-                      className="mt-2 text-sm leading-relaxed"
-                      style={{ color: "var(--text-muted)" }}
-                    >
-                      {item.detail}
-                    </p>
-                  </div>
+  return (
+    <>
+      <section id="work" className="section-y rule-top">
+        <div className="page-container">
+          <SectionHead
+            index="01"
+            kicker="Work"
+            title="Three systems, built and running."
+            lead="Each one solves a specific problem end to end. Source is public for all three."
+          />
+
+          <div>
+            {projects.map((item, i) => (
+              <ProjectCard key={item.title} item={item} index={i} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="education" className="section-y rule-top">
+        <div className="page-container">
+          <SectionHead
+            index="02"
+            kicker="Study"
+            title="Where the fundamentals came from."
+            lead="A full-stack degree first, then a master's focused on applied AI."
+          />
+
+          <div>
+            {education.map((item, i) => (
+              <motion.article
+                key={item.title}
+                initial={reduceMotion ? false : { opacity: 0, y: 18 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ duration: 0.5, ease: [0.2, 0.7, 0.3, 1] as const }}
+                className="ledger-row grid gap-x-10 gap-y-5 lg:grid-cols-[4.5rem_minmax(0,1fr)]"
+              >
+                <div className="flex items-baseline justify-between gap-4 lg:block">
+                  <span className="numeral" aria-hidden>
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
                 </div>
-              ))}
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    </section>
+
+                <div className="lg:pt-1">
+                  <p className="meta">{item.year}</p>
+                  <h3 className="t-h3 mt-3">{item.title}</h3>
+                  <p
+                    className="t-body mt-2 font-medium"
+                    style={{ color: "var(--accent)" }}
+                  >
+                    {item.subtitle}
+                  </p>
+                  <p
+                    className="t-body mt-4 max-w-[52ch]"
+                    style={{ color: "var(--text-muted)" }}
+                  >
+                    {item.detail}
+                  </p>
+                </div>
+              </motion.article>
+            ))}
+          </div>
+        </div>
+      </section>
+    </>
   );
 }

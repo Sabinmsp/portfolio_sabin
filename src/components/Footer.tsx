@@ -6,28 +6,26 @@ export default function Footer() {
   const { theme } = useTheme();
 
   return (
-    <footer
-      className="relative py-6 md:py-8"
-      style={{ borderTop: "1px solid var(--border)" }}
-    >
-      <div className="page-container flex flex-col items-center justify-between gap-3 sm:flex-row">
-        <a href="#home" className="flex items-center gap-2">
+    <footer className="rule-top py-10 md:py-12">
+      <div className="page-container flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
+        <a href="#home" className="flex items-center gap-2.5">
           <img
             src={theme === "dark" ? "/logo-dark.png" : "/logo-light.png"}
-            alt="S"
-            className="h-6 w-6 rounded object-contain"
+            alt=""
+            width={26}
+            height={26}
+            className="h-[26px] w-[26px] object-contain"
+            style={{ borderRadius: "var(--radius)" }}
           />
           <span
-            className="font-display text-sm font-semibold"
+            className="font-display text-[1.0625rem] font-semibold"
             style={{ color: "var(--text-heading)" }}
           >
-            Sabin
+            Sabin Pradhan
           </span>
         </a>
-        <p className="label-mono" style={{ color: "var(--text-faint)" }}>
-          © {new Date().getFullYear()} Sabin Pradhan
-        </p>
-        <div className="flex gap-4">
+
+        <ul className="flex flex-wrap gap-x-7 gap-y-3">
           {[
             { label: "GitHub", href: "https://github.com/Sabinmsp" },
             {
@@ -35,18 +33,23 @@ export default function Footer() {
               href: "https://www.linkedin.com/in/sabin-pradhan-652b333b6/",
             },
           ].map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="label-mono transition-colors hover:text-accent"
-              style={{ color: "var(--text-muted)" }}
-            >
-              {link.label}
-            </a>
+            <li key={link.label}>
+              <a
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="link-rule meta-plain"
+              >
+                {link.label}
+                <span className="sr-only">, opens in a new tab</span>
+              </a>
+            </li>
           ))}
-        </div>
+        </ul>
+
+        <p className="meta-plain" style={{ color: "var(--text-dim)" }}>
+          © {new Date().getFullYear()} Sabin Pradhan
+        </p>
       </div>
     </footer>
   );

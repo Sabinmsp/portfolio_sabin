@@ -1,86 +1,172 @@
 @import "tailwindcss";
 
-@theme {
-  /* Accent — desaturated green, sparingly used */
-  --color-accent: #5C9A74;
-  --color-accent-hover: #4E8664;
-  --color-accent-muted: #5C9A7433;
+/* ============================================================
+   INDEX / LEDGER
+   The page is a printed index. Hierarchy comes from rule weight
+   and numerals, not from boxes. No card backgrounds.
+   ============================================================ */
+
+@theme inline {
+  /* Theme aware, resolved from the :root blocks below */
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-ink: var(--text-heading);
+  --color-line: var(--border);
 
   /* Type stacks (wired from next/font CSS variables) */
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-space-grotesk), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-jetbrains-mono), ui-monospace, "SF Mono", Menlo, monospace;
-
-  /* Layout */
-  --container-max: 1100px;
-  --section-y: 3.5rem;
-  --section-y-md: 4.5rem;
+  --font-display: var(--font-space-grotesk), var(--font-inter), ui-sans-serif,
+    system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, "SF Mono", Menlo,
+    monospace;
 }
 
-/* Dark-first (default) */
+@theme {
+  --container-max: 1180px;
+}
+
+/* ------------------------------------------------------------
+   TYPE SCALE
+   Six steps, decisive jumps. 15px is the hard floor.
+   ------------------------------------------------------------ */
+:root {
+  --t-label: 0.9375rem; /* 15px  labels, tags, captions, footer */
+  --t-body: 1.0625rem; /* 17px  body, mobile */
+  --t-lead: 1.25rem; /* 20px  section leads */
+  --t-h3: 1.5rem; /* 24px  row titles */
+  --t-h2: 2.125rem; /* 34px  section headings */
+  --t-h1: 2.625rem; /* 42px  hero */
+  --t-numeral: 2.75rem; /* 44px  ledger numerals */
+
+  --rule-hair: 1px;
+  --rule-heavy: 2px;
+  --radius: 2px;
+
+  --section-y: 4.5rem;
+  --nav-h: 4.25rem;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --t-label: 0.9375rem; /* 15px floor holds */
+    --t-body: 1.125rem; /* 18px */
+    --t-lead: 1.4375rem; /* 23px */
+    --t-h3: 1.875rem; /* 30px */
+    --t-h2: 3rem; /* 48px */
+    --t-h1: 4.25rem; /* 68px */
+    --t-numeral: 5rem; /* 80px */
+
+    --section-y: 6.5rem;
+  }
+}
+
+/* ------------------------------------------------------------
+   COLOR
+   Dark is the primary design. Light is a warm paper variant,
+   not an inversion: different accent, different rule weights.
+   Every pairing below is measured at 4.5:1 or better.
+   ------------------------------------------------------------ */
 :root,
 [data-theme="dark"] {
-  --bg: #0A0A0B;
-  --bg-elevated: #101012;
-  --bg-card: #111113;
-  --bg-card-hover: #161618;
-  --bg-code: #0D0D0F;
-  --border: #1C1C1F;
-  --border-hover: #2A2A2E;
-  --text: #E8E8EA;
-  --text-muted: #8B8B93;
-  --text-heading: #F4F4F5;
-  --text-faint: #5C5C66;
-  --accent: var(--color-accent);
-  --accent-hover: var(--color-accent-hover);
+  --bg: #0a0a0b;
+  --bg-raised: #111114;
+  --bg-inset: #08080a;
+
+  --border: #26262b; /* visible hairline, not a ghost */
+  --border-strong: #3a3a42;
+  --border-ink: #6a6a74; /* heavy rules */
+
+  --text: #ededf0; /* 16.9:1 */
+  --text-heading: #fafafa; /* 18.4:1 */
+  --text-muted: #9a9aa4; /*  7.1:1 */
+  --text-dim: #7e7e88; /*  4.9:1 */
+
+  --accent: #5fae7e; /*  7.4:1 on bg */
+  --accent-strong: #5fae7e; /* fill: bright green */
+  --accent-on: #08140d; /*  7.0:1 on fill  */
+  --accent-tint: rgba(95, 174, 126, 0.14);
 }
 
 [data-theme="light"] {
-  --bg: #F7F7F8;
-  --bg-elevated: #FFFFFF;
-  --bg-card: #FFFFFF;
-  --bg-card-hover: #F0F0F2;
-  --bg-code: #F0F0F2;
-  --border: #E2E2E6;
-  --border-hover: #C8C8CE;
-  --text: #1A1A1C;
-  --text-muted: #6B6B74;
-  --text-heading: #0A0A0B;
-  --text-faint: #9A9AA3;
-  --accent: var(--color-accent);
-  --accent-hover: var(--color-accent-hover);
+  --bg: #faf9f7; /* warm paper */
+  --bg-raised: #ffffff;
+  --bg-inset: #f2f0ec;
+
+  --border: #dcd8d0;
+  --border-strong: #bab5aa;
+  --border-ink: #16161a;
+
+  --text: #16161a; /* 16.4:1 */
+  --text-heading: #0b0b0e; /* 17.8:1 */
+  --text-muted: #5a5a63; /*  6.5:1 */
+  --text-dim: #63636d; /*  5.6:1 on bg, 5.2:1 on bg-inset */
+
+  --accent: #2f6b47; /*  6.0:1 on bg */
+  --accent-strong: #2f6b47; /* fill: deep green */
+  --accent-on: #ffffff; /*  6.3:1 on fill  */
+  --accent-tint: rgba(47, 107, 71, 0.11);
 }
 
+/* ------------------------------------------------------------
+   BASE
+   ------------------------------------------------------------ */
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--nav-h) + 1rem);
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
   background-color: var(--bg);
   color: var(--text);
   font-family: var(--font-sans);
-  font-size: 15px;
-  line-height: 1.6;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  font-size: var(--t-body);
+  line-height: 1.65;
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 ::selection {
-  background: var(--color-accent-muted);
+  background: var(--accent-tint);
   color: var(--text-heading);
 }
 
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 10px;
 }
 ::-webkit-scrollbar-track {
   background: var(--bg);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--border-hover);
-  border-radius: 3px;
+  background: var(--border-strong);
 }
 
-/* ——— Layout ——— */
+/* Visible focus everywhere. Never removed, only styled. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -100%;
+  z-index: 100;
+  padding: 0.75rem 1rem;
+  background: var(--bg-raised);
+  border: var(--rule-heavy) solid var(--border-ink);
+  color: var(--text-heading);
+  font-size: var(--t-label);
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
+/* ------------------------------------------------------------
+   LAYOUT
+   Rules run edge to edge. Content stays in the container.
+   ------------------------------------------------------------ */
 .page-container {
   width: 100%;
   max-width: var(--container-max);
@@ -90,7 +176,7 @@ body {
 
 @media (min-width: 768px) {
   .page-container {
-    padding-inline: 1.5rem;
+    padding-inline: 2rem;
   }
 }
 
@@ -98,213 +184,282 @@ body {
   padding-block: var(--section-y);
 }
 
+/* Full bleed rule at the top of a section */
+.rule-top {
+  border-top: var(--rule-heavy) solid var(--border-ink);
+}
+
+.rule-hair-top {
+  border-top: var(--rule-hair) solid var(--border);
+}
+
+/* ------------------------------------------------------------
+   TYPE UTILITIES
+   Use these instead of Tailwind text-* so the scale stays closed.
+   ------------------------------------------------------------ */
+.t-label {
+  font-size: var(--t-label);
+  line-height: 1.45;
+}
+
+.t-body {
+  font-size: var(--t-body);
+  line-height: 1.65;
+}
+
+.t-lead {
+  font-size: var(--t-lead);
+  line-height: 1.5;
+}
+
+.t-h3 {
+  font-family: var(--font-display);
+  font-size: var(--t-h3);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--text-heading);
+}
+
+.t-h2 {
+  font-family: var(--font-display);
+  font-size: var(--t-h2);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: var(--text-heading);
+}
+
+.t-h1 {
+  font-family: var(--font-display);
+  font-size: var(--t-h1);
+  font-weight: 600;
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  color: var(--text-heading);
+  text-wrap: balance;
+}
+
+/* Mono meta: section keys, years, tags, form labels. Never below 15px. */
+.meta {
+  font-family: var(--font-mono);
+  font-size: var(--t-label);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.meta-plain {
+  font-family: var(--font-mono);
+  font-size: var(--t-label);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--text-muted);
+}
+
+/* The ledger numeral. The signature element of the layout. */
+.numeral {
+  font-family: var(--font-mono);
+  font-size: var(--t-numeral);
+  font-weight: 700;
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-dim);
+  transition: color 0.25s ease;
+}
+
+.ledger-row:hover .numeral,
+.ledger-row:focus-within .numeral {
+  color: var(--accent);
+}
+
+/* ------------------------------------------------------------
+   LEDGER ROWS
+   ------------------------------------------------------------ */
+.ledger-row {
+  border-top: var(--rule-hair) solid var(--border);
+  padding-block: 2.25rem;
+}
+
+.ledger-row:last-child {
+  border-bottom: var(--rule-hair) solid var(--border);
+}
+
 @media (min-width: 768px) {
-  .section-y {
-    padding-block: var(--section-y-md);
+  .ledger-row {
+    padding-block: 3.25rem;
   }
 }
 
-/* ——— Type ——— */
-.font-display {
-  font-family: var(--font-display);
-  letter-spacing: -0.02em;
-}
-
-.font-mono {
+/* Tech tags: hairline underline, no pill, no box */
+.tag {
   font-family: var(--font-mono);
-}
-
-.heading {
-  font-family: var(--font-display);
-  color: var(--text-heading);
-  font-weight: 600;
-  letter-spacing: -0.025em;
-  line-height: 1.15;
-}
-
-.label-mono {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 450;
-  letter-spacing: 0.02em;
+  font-size: var(--t-label);
+  line-height: 1.2;
+  letter-spacing: 0.01em;
   color: var(--text-muted);
+  padding-bottom: 0.2rem;
+  border-bottom: var(--rule-hair) solid var(--border-strong);
+  white-space: nowrap;
 }
 
-/* Stack / tech labels — mono, bordered, not pills */
-.stack-label {
+/* ------------------------------------------------------------
+   ACTIONS
+   Accent fill is reserved for the single primary action in a
+   context. Everything else is a ruled or underlined link.
+   ------------------------------------------------------------ */
+.btn {
   display: inline-flex;
   align-items: center;
+  gap: 0.5rem;
   font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  line-height: 1;
-  letter-spacing: 0.02em;
-  color: var(--text-muted);
-  border: 1px solid var(--border);
-  padding: 0.35rem 0.5rem;
-  border-radius: 2px;
-  background: transparent;
+  font-size: var(--t-label);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  padding: 0.75rem 1.15rem;
+  border-radius: var(--radius);
+  border: var(--rule-heavy) solid transparent;
+  transition: background-color 0.18s ease, border-color 0.18s ease,
+    color 0.18s ease, transform 0.18s ease;
 }
 
-.metric-mono {
-  font-family: var(--font-mono);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: -0.01em;
+.btn-primary {
+  background: var(--accent-strong);
+  color: var(--accent-on);
+  border-color: var(--accent-strong);
 }
 
-/* ——— Surfaces ——— */
-.surface {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
+.btn-primary:hover {
+  filter: brightness(1.08);
 }
 
-.surface:hover {
-  border-color: var(--border-hover);
-  background: var(--bg-card-hover);
+.btn-ghost {
+  color: var(--text-heading);
+  border-color: var(--border-strong);
 }
 
-/* Legacy aliases used by existing components during migration */
-.card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  transition: background-color 0.15s ease, border-color 0.15s ease;
-}
-
-.card:hover {
-  background: var(--bg-card-hover);
-  border-color: var(--border-hover);
-}
-
-.card-strong {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  transition: border-color 0.15s ease;
-}
-
-.card-strong:hover {
-  border-color: var(--border-hover);
-}
-
-/* Browser chrome frame for project screenshots */
-.browser-frame {
-  background: var(--bg-elevated);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  overflow: hidden;
-}
-
-.browser-frame__bar {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 0.5rem 0.75rem;
-  border-bottom: 1px solid var(--border);
-  background: var(--bg-card);
-}
-
-.browser-frame__dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--border-hover);
-}
-
-.browser-frame__url {
-  flex: 1;
-  margin-left: 0.5rem;
-  font-family: var(--font-mono);
-  font-size: 0.625rem;
-  color: var(--text-faint);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.browser-frame__body {
-  position: relative;
-  background: var(--bg);
-  aspect-ratio: 16 / 10;
-  overflow: hidden;
-}
-
-.browser-frame__body img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: top;
-}
-
-/* System output / code flourish */
-.code-block {
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  line-height: 1.55;
-  background: var(--bg-code);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 0.75rem 0.875rem;
-  overflow-x: auto;
-  color: var(--text-muted);
-  white-space: pre;
-}
-
-.code-block .tok-key {
-  color: var(--text);
-}
-
-.code-block .tok-str {
-  color: var(--color-accent);
-}
-
-.code-block .tok-num {
-  color: #C4A35A;
-}
-
-.code-block .tok-comment {
-  color: var(--text-faint);
-}
-
-/* Link accent — sparingly */
-a.link-accent {
-  color: var(--color-accent);
-  text-decoration: none;
-  transition: color 0.15s ease;
-}
-
-a.link-accent:hover {
-  color: var(--color-accent-hover);
-}
-
-/* Status availability — restrained, no glow bloom */
-.status-available-dot {
-  display: block;
-  width: 7px;
-  height: 7px;
-  border-radius: 9999px;
-  background: var(--color-accent);
-  box-shadow: 0 0 0 0 transparent;
+.btn-ghost:hover {
+  border-color: var(--border-ink);
+  background: var(--bg-raised);
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .status-available-dot {
-    animation: status-dot-pulse 2.4s ease-in-out infinite;
+  .btn:hover {
+    transform: translateY(-2px);
+  }
+  .btn:active {
+    transform: translateY(0);
   }
 }
 
-@keyframes status-dot-pulse {
-  0%,
-  100% {
-    box-shadow: 0 0 0 0 var(--color-accent-muted);
-  }
-  50% {
-    box-shadow: 0 0 0 4px transparent;
+/* Underline link with a rule that grows on hover */
+.link-rule {
+  position: relative;
+  color: var(--text-heading);
+  text-decoration: none;
+  padding-bottom: 2px;
+  background-image: linear-gradient(var(--accent), var(--accent));
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 100% var(--rule-hair);
+  transition: background-size 0.22s ease, color 0.18s ease;
+}
+
+.link-rule:hover {
+  background-size: 100% var(--rule-heavy);
+  color: var(--accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .link-rule {
+    transition: color 0.18s ease;
   }
 }
 
-/* Subtle fade-up (scroll / enter) — no bounce */
-@keyframes fade-up {
+/* ------------------------------------------------------------
+   FORM
+   ------------------------------------------------------------ */
+.field {
+  width: 100%;
+  font-family: var(--font-sans);
+  font-size: var(--t-body);
+  line-height: 1.5;
+  color: var(--text);
+  background: transparent;
+  border: 0;
+  border-bottom: var(--rule-hair) solid var(--border-strong);
+  border-radius: 0;
+  padding: 0.7rem 0.15rem;
+  transition: border-color 0.18s ease, background-color 0.18s ease;
+}
+
+.field::placeholder {
+  color: var(--text-dim);
+}
+
+.field:hover {
+  border-bottom-color: var(--border-ink);
+}
+
+.field:focus {
+  outline: none;
+  border-bottom: var(--rule-heavy) solid var(--accent);
+  padding-bottom: calc(0.7rem - 1px);
+}
+
+.field:focus-visible {
+  outline: none;
+}
+
+/* ------------------------------------------------------------
+   PROJECT VISUALS
+   ------------------------------------------------------------ */
+.visual-frame {
+  position: relative;
+  overflow: hidden;
+  border: var(--rule-hair) solid var(--border);
+  background: var(--bg-inset);
+  border-radius: var(--radius);
+  aspect-ratio: 4 / 3;
+}
+
+/* Diagram variant: content sets the height so long labels never clip */
+.visual-frame--flow {
+  aspect-ratio: auto;
+  min-height: 15rem;
+}
+
+.visual-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .ledger-row:hover .visual-frame img {
+    transform: scale(1.03);
+  }
+}
+
+.visual-caption {
+  font-family: var(--font-mono);
+  font-size: var(--t-label);
+  color: var(--text-dim);
+  margin-top: 0.65rem;
+}
+
+/* ------------------------------------------------------------
+   MOTION
+   Entrance only, short, no bounce.
+   ------------------------------------------------------------ */
+@keyframes rise {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(14px);
   }
   to {
     opacity: 1;
@@ -312,111 +467,65 @@ a.link-accent:hover {
   }
 }
 
-.fade-up {
-  animation: fade-up 0.45s ease-out both;
+@keyframes rule-in {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.rise {
+  animation: rise 0.5s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+
+.rule-in {
+  transform-origin: left;
+  animation: rule-in 0.7s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+
+.status-dot {
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: var(--accent);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .status-dot {
+    animation: dot-pulse 2.6s ease-in-out infinite;
+  }
+}
+
+@keyframes dot-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 var(--accent-tint);
+  }
+  50% {
+    box-shadow: 0 0 0 5px transparent;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .status-available-dot,
-  .fade-up {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .rise,
+  .rule-in,
+  .status-dot {
     animation: none;
   }
 
-  .fade-up {
+  .rise {
     opacity: 1;
     transform: none;
   }
-}
 
-/* Truck loader (loading screen) */
-.loader {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.truckWrapper {
-  width: 200px;
-  height: 100px;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  align-items: center;
-  justify-content: flex-end;
-  overflow-x: hidden;
-}
-
-.truckBody {
-  width: 130px;
-  height: fit-content;
-  margin-bottom: 6px;
-  animation: truckBounce 1s linear infinite;
-}
-
-@keyframes truckBounce {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(3px); }
-  100% { transform: translateY(0px); }
-}
-
-.truckTires {
-  width: 130px;
-  height: fit-content;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0px 10px 0px 15px;
-  position: absolute;
-  bottom: 0;
-}
-
-.truckTires svg {
-  width: 24px;
-}
-
-.road {
-  width: 100%;
-  height: 1.5px;
-  background-color: var(--text-faint);
-  position: relative;
-  bottom: 0;
-  align-self: flex-end;
-  border-radius: 3px;
-}
-
-.road::before {
-  content: "";
-  position: absolute;
-  width: 20px;
-  height: 100%;
-  background-color: var(--text-faint);
-  right: -50%;
-  border-radius: 3px;
-  animation: roadMove 1.4s linear infinite;
-  border-left: 10px solid var(--bg);
-}
-
-.road::after {
-  content: "";
-  position: absolute;
-  width: 10px;
-  height: 100%;
-  background-color: var(--text-faint);
-  right: -65%;
-  border-radius: 3px;
-  animation: roadMove 1.4s linear infinite;
-  border-left: 4px solid var(--bg);
-}
-
-.lampPost {
-  position: absolute;
-  bottom: 0;
-  right: -90%;
-  height: 90px;
-  animation: roadMove 1.4s linear infinite;
-}
-
-@keyframes roadMove {
-  0% { transform: translateX(0px); }
-  100% { transform: translateX(-350px); }
+  .rule-in {
+    transform: none;
+  }
 }

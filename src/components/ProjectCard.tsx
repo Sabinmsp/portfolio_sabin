@@ -1,7 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { ExternalLink, Github } from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
+import { ArrowUpRight, Github } from "lucide-react";
+import ProjectVisual, { type ProjectVisualSpec } from "./ProjectVisual";
 
 export type ProjectLinks = {
   live?: string;
@@ -14,8 +15,13 @@ export type ProjectItem = {
   summary: string;
   techTags: string[];
   links: ProjectLinks;
+  visual: ProjectVisualSpec;
 };
 
+/**
+ * A ledger row, not a card. No background, no box: the row is defined by the
+ * hairline rule above it and the oversized numeral in the left margin.
+ */
 export default function ProjectCard({
   item,
   index,
@@ -23,69 +29,83 @@ export default function ProjectCard({
   item: ProjectItem;
   index: number;
 }) {
+  const reduceMotion = useReducedMotion();
+  const number = String(index + 1).padStart(2, "0");
+
+  /**
+   * One filled action per row. When a project has no live deployment its
+   * repository is the primary action, so it carries the fill.
+   */
+  const liveIsPrimary = Boolean(item.links.live);
+
   return (
     <motion.article
-      aria-label={`Project: ${item.title}`}
-      initial={{ opacity: 0, y: 12 }}
+      aria-labelledby={`project-${number}`}
+      initial={reduceMotion ? false : { opacity: 0, y: 18 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.35, delay: index * 0.05, ease: "easeOut" }}
-      className="border p-5 md:p-6"
-      style={{
-        borderColor: "var(--border)",
-        background: "var(--bg-card)",
-        borderRadius: 4,
-      }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.5, ease: [0.2, 0.7, 0.3, 1] as const }}
+      className="ledger-row grid gap-x-10 gap-y-7 lg:grid-cols-[4.5rem_minmax(0,1.05fr)_minmax(0,0.95fr)]"
     >
-      <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-        <h3 className="heading text-lg md:text-xl">{item.title}</h3>
-        <span className="label-mono">{item.year}</span>
+      {/* Numeral, set in the margin on desktop */}
+      <div className="flex items-baseline justify-between gap-4 lg:block">
+        <span className="numeral" aria-hidden>
+          {number}
+        </span>
+        <span className="meta lg:mt-4 lg:block">{item.year}</span>
       </div>
 
-      <p
-        className="mt-3 text-sm leading-relaxed md:text-[15px]"
-        style={{ color: "var(--text-muted)" }}
-      >
-        {item.summary}
-      </p>
+      <div className="lg:pt-1">
+        <h3 id={`project-${number}`} className="t-h3">
+          {item.title}
+        </h3>
 
-      <div className="mt-4 flex flex-wrap gap-1.5">
-        {item.techTags.map((tag) => (
-          <span key={tag} className="stack-label">
-            {tag}
-          </span>
-        ))}
+        <p
+          className="t-body mt-4 max-w-[52ch]"
+          style={{ color: "var(--text-muted)" }}
+        >
+          {item.summary}
+        </p>
+
+        <ul className="mt-7 flex flex-wrap gap-x-3 gap-y-3" aria-label="Stack">
+          {item.techTags.map((tag) => (
+            <li key={tag} className="tag">
+              {tag}
+            </li>
+          ))}
+        </ul>
+
+        <div className="mt-8 flex flex-wrap items-center gap-3">
+          {item.links.live ? (
+            <a
+              href={item.links.live}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-primary"
+            >
+              Visit live site
+              <ArrowUpRight className="h-[18px] w-[18px]" aria-hidden />
+              <span className="sr-only">, opens in a new tab</span>
+            </a>
+          ) : null}
+
+          {item.links.github ? (
+            <a
+              href={item.links.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`btn ${liveIsPrimary ? "btn-ghost" : "btn-primary"}`}
+            >
+              <Github className="h-[18px] w-[18px]" aria-hidden />
+              {liveIsPrimary ? "Source" : "Read the source"}
+              <span className="sr-only">, opens in a new tab</span>
+            </a>
+          ) : null}
+        </div>
       </div>
 
-      <div className="mt-5 flex flex-wrap gap-2">
-        {item.links.live ? (
-          <a
-            href={item.links.live}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 bg-accent px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-accent-hover"
-            style={{ borderRadius: 3 }}
-          >
-            <ExternalLink className="h-3 w-3" />
-            Live
-          </a>
-        ) : null}
-        {item.links.github ? (
-          <a
-            href={item.links.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 border px-3 py-1.5 text-xs font-medium transition-colors hover:border-[var(--border-hover)] hover:text-accent"
-            style={{
-              color: "var(--text-heading)",
-              borderColor: "var(--border)",
-              borderRadius: 3,
-            }}
-          >
-            <Github className="h-3 w-3" />
-            GitHub
-          </a>
-        ) : null}
+      <div className="lg:pt-1">
+        <ProjectVisual visual={item.visual} />
       </div>
     </motion.article>
   );

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import ThemeProvider from "@/components/ThemeProvider";
 import "./globals.css";
@@ -24,7 +24,12 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "Sabin Pradhan | AI Engineer",
   description:
-    "Portfolio of Sabin Pradhan — CareerOS, Gym AI Coach, and an AI RC car simulator.",
+    "AI engineer building small systems that ship: CareerOS, Gym AI Coach, and an AI RC car simulator.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({
@@ -40,10 +45,6 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1, maximum-scale=1"
-        />
         {/* Prevent flash of wrong theme before hydration */}
         <script
           dangerouslySetInnerHTML={{

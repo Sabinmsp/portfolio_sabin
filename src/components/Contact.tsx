@@ -1,8 +1,8 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { useRef, useState, useCallback } from "react";
-import { Send, Mail, CheckCircle, Loader2, AlertCircle } from "lucide-react";
+import { Send, CheckCircle, Loader2, AlertCircle } from "lucide-react";
 
 const WEB3FORMS_SUBMIT_URL = "https://api.web3forms.com/submit";
 const CLIENT_COOLDOWN_MS = 45_000;
@@ -19,8 +19,7 @@ function web3Message(data: Record<string, unknown>): string {
 }
 
 export default function Contact() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-80px" });
+  const reduceMotion = useReducedMotion();
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
     "idle"
   );
@@ -136,47 +135,43 @@ export default function Contact() {
     []
   );
 
-  const fieldClass =
-    "w-full px-3 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-accent/40 transition-colors";
-  const fieldStyle = {
-    background: "var(--bg)",
-    border: "1px solid var(--border)",
-    color: "var(--text)",
-    borderRadius: 4,
-  } as const;
+  const rise = {
+    initial: reduceMotion ? false : { opacity: 0, y: 16 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true, margin: "-60px" },
+    transition: reduceMotion
+      ? { duration: 0 }
+      : { duration: 0.5, ease: [0.2, 0.7, 0.3, 1] as const },
+  };
 
   return (
-    <section
-      id="contact"
-      className="section-y relative min-h-[min(100vh,720px)] flex items-center"
-    >
-      <div className="page-container w-full" ref={ref}>
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.4 }}
-          className="grid gap-8 lg:grid-cols-[1fr_1.4fr] lg:gap-12 lg:items-start"
-        >
-          <div>
-            <h2 className="heading text-2xl md:text-3xl">Get in touch</h2>
-            <p
-              className="mt-2 text-sm leading-relaxed md:text-[15px]"
-              style={{ color: "var(--text-muted)" }}
-            >
-              Open to AI engineering roles and collaborations. Prefer email or
-              the form — I respond within a few days.
-            </p>
+    <section id="contact" className="section-y rule-top">
+      <div className="page-container">
+        <motion.header {...rise} className="mb-12 md:mb-16">
+          <p className="meta">03 / Contact</p>
+          <h2 className="t-h2 mt-4">Get in touch.</h2>
+          <p
+            className="t-lead mt-5 max-w-[42ch]"
+            style={{ color: "var(--text-muted)" }}
+          >
+            Open to AI engineering roles and collaborations. I reply within a
+            few days.
+          </p>
+        </motion.header>
 
+        <div className="grid gap-x-14 gap-y-12 lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)]">
+          <motion.div {...rise}>
+            <p className="meta">Direct</p>
             <a
               href="mailto:sabinmsp@gmail.com"
-              className="mt-5 inline-flex items-center gap-2 text-sm transition-colors hover:text-accent"
-              style={{ color: "var(--text-heading)" }}
+              className="link-rule mt-4 inline-block font-mono"
+              style={{ fontSize: "var(--t-lead)" }}
             >
-              <Mail className="h-4 w-4 text-accent" />
-              <span className="font-mono text-[13px]">sabinmsp@gmail.com</span>
+              sabinmsp@gmail.com
             </a>
 
-            <div className="mt-4 flex gap-3">
+            <p className="meta mt-10">Elsewhere</p>
+            <ul className="mt-4 flex flex-col gap-3">
               {[
                 { label: "GitHub", href: "https://github.com/Sabinmsp" },
                 {
@@ -184,31 +179,28 @@ export default function Contact() {
                   href: "https://www.linkedin.com/in/sabin-pradhan-652b333b6/",
                 },
               ].map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="label-mono border px-2.5 py-1.5 transition-colors hover:border-[var(--border-hover)] hover:text-accent"
-                  style={{
-                    color: "var(--text-muted)",
-                    borderColor: "var(--border)",
-                    borderRadius: 3,
-                  }}
-                >
-                  {link.label}
-                </a>
+                <li key={link.label}>
+                  <a
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="link-rule meta-plain"
+                  >
+                    {link.label}
+                    <span className="sr-only">, opens in a new tab</span>
+                  </a>
+                </li>
               ))}
-            </div>
-          </div>
+            </ul>
+          </motion.div>
 
-          <form
+          <motion.form
+            {...rise}
             onSubmit={handleSubmit}
-            className="relative space-y-4 border p-5 md:p-6"
+            className="flex flex-col gap-7"
             style={{
-              background: "var(--bg-card)",
-              borderColor: "var(--border)",
-              borderRadius: 4,
+              borderTop: "var(--rule-heavy) solid var(--border-ink)",
+              paddingTop: "2rem",
             }}
           >
             <input
@@ -222,12 +214,9 @@ export default function Contact() {
               defaultValue=""
             />
 
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid gap-7 sm:grid-cols-2">
               <div>
-                <label
-                  htmlFor="name"
-                  className="label-mono mb-1.5 block"
-                >
+                <label htmlFor="name" className="meta mb-2 block">
                   Name
                 </label>
                 <input
@@ -238,15 +227,11 @@ export default function Contact() {
                   minLength={1}
                   maxLength={120}
                   placeholder="Your name"
-                  className={fieldClass}
-                  style={fieldStyle}
+                  className="field"
                 />
               </div>
               <div>
-                <label
-                  htmlFor="email"
-                  className="label-mono mb-1.5 block"
-                >
+                <label htmlFor="email" className="meta mb-2 block">
                   Email
                 </label>
                 <input
@@ -256,17 +241,13 @@ export default function Contact() {
                   required
                   maxLength={254}
                   placeholder="you@company.com"
-                  className={fieldClass}
-                  style={fieldStyle}
+                  className="field"
                 />
               </div>
             </div>
 
             <div>
-              <label
-                htmlFor="subject"
-                className="label-mono mb-1.5 block"
-              >
+              <label htmlFor="subject" className="meta mb-2 block">
                 Subject
               </label>
               <input
@@ -277,16 +258,12 @@ export default function Contact() {
                 minLength={1}
                 maxLength={200}
                 placeholder="Role, project, or question"
-                className={fieldClass}
-                style={fieldStyle}
+                className="field"
               />
             </div>
 
             <div>
-              <label
-                htmlFor="message"
-                className="label-mono mb-1.5 block"
-              >
+              <label htmlFor="message" className="meta mb-2 block">
                 Message
               </label>
               <textarea
@@ -295,17 +272,16 @@ export default function Contact() {
                 required
                 minLength={1}
                 maxLength={5000}
-                rows={4}
-                placeholder="What are you building? (10+ characters)"
-                className={`${fieldClass} resize-none`}
-                style={fieldStyle}
+                rows={5}
+                placeholder="What are you building?"
+                className="field resize-none"
               />
             </div>
 
             {notice ? (
               <p
-                className="text-center text-sm"
-                style={{ color: "var(--text-muted)" }}
+                className="t-label"
+                style={{ color: "var(--text)" }}
                 role="status"
               >
                 {notice}
@@ -315,33 +291,32 @@ export default function Contact() {
             <button
               type="submit"
               disabled={status === "sending"}
-              className="inline-flex w-full items-center justify-center gap-2 bg-accent px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent-hover disabled:opacity-70"
-              style={{ borderRadius: 4 }}
+              className="btn btn-primary w-full justify-center disabled:opacity-70"
             >
               {status === "sending" ? (
                 <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  Sending…
+                  <Loader2 className="h-[18px] w-[18px] animate-spin" aria-hidden />
+                  Sending
                 </>
               ) : status === "sent" ? (
                 <>
-                  <CheckCircle className="h-4 w-4" />
+                  <CheckCircle className="h-[18px] w-[18px]" aria-hidden />
                   Sent
                 </>
               ) : status === "error" ? (
                 <>
-                  <AlertCircle className="h-4 w-4" />
-                  Failed — try again
+                  <AlertCircle className="h-[18px] w-[18px]" aria-hidden />
+                  Failed. Try again
                 </>
               ) : (
                 <>
-                  <Send className="h-4 w-4" />
+                  <Send className="h-[18px] w-[18px]" aria-hidden />
                   Send message
                 </>
               )}
             </button>
-          </form>
-        </motion.div>
+          </motion.form>
+        </div>
       </div>
     </section>
   );
