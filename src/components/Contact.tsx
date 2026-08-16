@@ -2,7 +2,8 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import { useRef, useState, useCallback } from "react";
-import { Send, CheckCircle, Loader2, AlertCircle } from "lucide-react";
+import { Send, CheckCircle, Loader2, AlertCircle, Download } from "lucide-react";
+import { site, socialLinks } from "@/data/site";
 
 const WEB3FORMS_SUBMIT_URL = "https://api.web3forms.com/submit";
 const CLIENT_COOLDOWN_MS = 45_000;
@@ -38,11 +39,13 @@ export default function Contact() {
 
       const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY?.trim();
       if (!accessKey) {
-        setNotice(
-          "Contact form is not configured (missing NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY)."
+        // Keep the cause diagnosable without showing a visitor an env var name.
+        console.error(
+          "Contact form disabled: NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY is not set."
         );
+        setNotice(`The form is unavailable. Please email me at ${site.email}.`);
         setStatus("error");
-        setTimeout(() => setStatus("idle"), 4000);
+        setTimeout(() => setStatus("idle"), 6000);
         return;
       }
 
@@ -148,14 +151,15 @@ export default function Contact() {
     <section id="contact" className="section-y rule-top">
       <div className="page-container">
         <motion.header {...rise} className="mb-12 md:mb-16">
-          <p className="meta">03 / Contact</p>
-          <h2 className="t-h2 mt-4">Get in touch.</h2>
+          <p className="meta">04 / Contact</p>
+          <h2 className="t-h2 mt-4">Hiring for an AI or software role?</h2>
           <p
-            className="t-lead mt-5 max-w-[42ch]"
+            className="t-lead mt-5 max-w-[46ch]"
             style={{ color: "var(--text-muted)" }}
           >
-            Open to AI engineering roles and collaborations. I reply within a
-            few days.
+            I am open to engineering roles, internships and selected
+            collaborations. Email reaches me fastest, and I reply within a few
+            days.
           </p>
         </motion.header>
 
@@ -163,28 +167,22 @@ export default function Contact() {
           <motion.div {...rise}>
             <p className="meta">Direct</p>
             <a
-              href="mailto:sabinmsp@gmail.com"
-              className="link-rule mt-4 inline-block font-mono"
+              href={`mailto:${site.email}`}
+              className="tap link-rule mt-3 font-mono break-all"
               style={{ fontSize: "var(--t-lead)" }}
             >
-              sabinmsp@gmail.com
+              {site.email}
             </a>
 
             <p className="meta mt-10">Elsewhere</p>
             <ul className="mt-4 flex flex-col gap-3">
-              {[
-                { label: "GitHub", href: "https://github.com/Sabinmsp" },
-                {
-                  label: "LinkedIn",
-                  href: "https://www.linkedin.com/in/sabin-pradhan-652b333b6/",
-                },
-              ].map((link) => (
+              {socialLinks.map((link) => (
                 <li key={link.label}>
                   <a
                     href={link.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="link-rule meta-plain"
+                    className="tap link-rule meta-plain"
                   >
                     {link.label}
                     <span className="sr-only">, opens in a new tab</span>
@@ -192,6 +190,11 @@ export default function Contact() {
                 </li>
               ))}
             </ul>
+
+            <a href={site.resume} download className="btn btn-ghost mt-8">
+              <Download className="h-[18px] w-[18px]" aria-hidden />
+              Download resume
+            </a>
           </motion.div>
 
           <motion.form

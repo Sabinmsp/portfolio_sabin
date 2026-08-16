@@ -35,7 +35,7 @@
   --t-lead: 1.25rem; /* 20px  section leads */
   --t-h3: 1.5rem; /* 24px  row titles */
   --t-h2: 2.125rem; /* 34px  section headings */
-  --t-h1: 2.625rem; /* 42px  hero */
+  --t-h1: 2.375rem; /* 38px  hero */
   --t-numeral: 2.75rem; /* 44px  ledger numerals */
 
   --rule-hair: 1px;
@@ -306,6 +306,66 @@ body {
 }
 
 /* ------------------------------------------------------------
+   EXPANDABLE ENGINEERING DETAILS
+   Native <details>, no JS, keyboard accessible for free.
+   ------------------------------------------------------------ */
+.details-summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 44px;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: var(--t-label);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--text-heading);
+  padding: 0.5rem 0;
+  list-style: none;
+  transition: color 0.18s ease;
+}
+
+.details-summary::-webkit-details-marker {
+  display: none;
+}
+
+.details-summary:hover {
+  color: var(--accent);
+}
+
+.details-icon {
+  color: var(--accent);
+  transition: transform 0.22s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+.details-block[open] .details-icon {
+  transform: rotate(45deg);
+}
+
+/* Each detail hangs off a spine, echoing the pipeline diagrams */
+.details-item {
+  position: relative;
+  padding-left: 1.15rem;
+  color: var(--text-muted);
+}
+
+.details-item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 0.6rem;
+  height: 2px;
+  background: var(--border-ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .details-icon {
+    transition: none;
+  }
+}
+
+/* ------------------------------------------------------------
    ACTIONS
    Accent fill is reserved for the single primary action in a
    context. Everything else is a ruled or underlined link.
@@ -352,6 +412,13 @@ body {
   .btn:active {
     transform: translateY(0);
   }
+}
+
+/* Guarantees a comfortable touch target on links that are otherwise text */
+.tap {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
 }
 
 /* Underline link with a rule that grows on hover */

@@ -19,22 +19,39 @@ A single page portfolio built with Next.js 15 (App Router), TypeScript, Tailwind
 ```
 src/
 ├── app/
-│   ├── layout.tsx
+│   ├── layout.tsx          # metadata, JSON-LD, fonts, theme boot
 │   ├── page.tsx
-│   ├── icon.png        # favicon
-│   └── globals.css     # design tokens, type scale, ledger primitives
+│   ├── opengraph-image.tsx # social preview card (next/og)
+│   ├── icon.png            # favicon
+│   └── globals.css         # design tokens, type scale, ledger primitives
 ├── components/
+│   ├── Capabilities.tsx    # "How I build" + tool groups
 │   ├── Contact.tsx
-│   ├── Experience.tsx  # Work and Study sections
+│   ├── Experience.tsx      # exports Work and Education sections
 │   ├── Footer.tsx
 │   ├── Hero.tsx
 │   ├── Navbar.tsx
-│   ├── ProjectCard.tsx   # a ledger row
-│   ├── ProjectVisual.tsx # screenshot or pipeline diagram
+│   ├── ProjectCard.tsx     # a ledger row
+│   ├── ProjectVisual.tsx   # screenshot or pipeline diagram
+│   ├── SectionHead.tsx     # shared numbered section header
 │   └── ThemeProvider.tsx
-└── public/
-    ├── resume PDF, images, logos
+└── data/
+    ├── capabilities.ts     # capability groups + build principles
+    ├── projects.ts         # project records
+    └── site.ts             # name, links, resume path, tagline
 ```
+
+## Evidence rule
+
+Everything on this page is traceable to a repository. Project stacks list
+dependencies that appear in that project's manifest, and the engineering notes
+describe code that exists. Nothing aspirational is listed: CareerOS names
+Qdrant and Redis under "deliberately not built", so neither appears here, and
+Qdrant is listed only because Gym AI Coach ships a working adapter for it.
+
+Project copy lives in `src/data/projects.ts`. When a project changes, update
+that file rather than the components.
+
 
 ## Design system
 
@@ -59,9 +76,10 @@ Everything is driven by tokens in `globals.css`.
 - `kind: "flow"` draws the pipeline the project actually runs.
 - `kind: "shot"` renders a real screenshot (`src`, `alt`, `caption`).
 
-The `mockup-*.png` files in `public/` are stock product photos, not screenshots
-of these projects, so nothing references them. Drop a genuine screenshot into
-`public/` and switch that project to `kind: "shot"` when you have one.
+All three projects currently use `kind: "flow"`. The `mockup-*.png` files in
+`public/` are stock product photos, not screenshots of these projects, so
+nothing references them. Drop a genuine screenshot into `public/` and switch
+that project to `kind: "shot"` when you have one.
 
 ## Setup
 
@@ -80,7 +98,9 @@ Open [http://localhost:3000](http://localhost:3000).
 |----------|----------|--------|
 | `NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY` | Yes (contact form) | Web3Forms access key. Inlined at build time (required so the browser can POST directly to `https://api.web3forms.com/submit` and avoid server-side Cloudflare blocks). Set in Vercel → Environment Variables. Never commit `.env.local`. Restrict the key to your production domain in the [Web3Forms](https://web3forms.com) dashboard when possible. |
 
-The contact form POSTs JSON from the **browser** to Web3Forms (same approach as their official JS examples).
+| `NEXT_PUBLIC_SITE_URL` | No | Absolute site URL used for the canonical link and Open Graph tags, e.g. `https://your-domain.com`. On Vercel this falls back to the project's production URL automatically, so it only needs setting on a custom domain. |
+
+The contact form POSTs JSON from the **browser** to Web3Forms (same approach as their official JS examples). Without the access key the form shows a message pointing at the email address instead of failing silently.
 
 ## Build
 

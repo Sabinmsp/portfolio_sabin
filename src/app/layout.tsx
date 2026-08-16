@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import ThemeProvider from "@/components/ThemeProvider";
+import { site, getSiteUrl } from "@/data/site";
 import "./globals.css";
 
 const inter = Inter({
@@ -21,10 +22,40 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
+const siteUrl = getSiteUrl();
+const title = `${site.name} | AI & Software Engineer`;
+
 export const metadata: Metadata = {
-  title: "Sabin Pradhan | AI Engineer",
-  description:
-    "AI engineer building small systems that ship: CareerOS, Gym AI Coach, and an AI RC car simulator.",
+  ...(siteUrl ? { metadataBase: new URL(siteUrl) } : {}),
+  title,
+  description: site.tagline,
+  applicationName: `${site.name} portfolio`,
+  authors: [{ name: site.name, url: site.github }],
+  keywords: [
+    "AI Engineer",
+    "Applied AI Engineer",
+    "LLM Engineer",
+    "RAG",
+    "Python",
+    "FastAPI",
+    "Next.js",
+    "TypeScript",
+    site.name,
+  ],
+  ...(siteUrl ? { alternates: { canonical: "/" } } : {}),
+  openGraph: {
+    type: "profile",
+    title,
+    description: site.tagline,
+    siteName: `${site.name} portfolio`,
+    ...(siteUrl ? { url: siteUrl } : {}),
+  },
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description: site.tagline,
+  },
+  robots: { index: true, follow: true },
 };
 
 export const viewport: Viewport = {
@@ -49,6 +80,29 @@ export default function RootLayout({
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark"){document.documentElement.setAttribute("data-theme",t);}else{document.documentElement.setAttribute("data-theme","dark");}}catch(e){}})();`,
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Person",
+              name: site.name,
+              jobTitle: "AI / Software Engineer",
+              description: site.tagline,
+              email: `mailto:${site.email}`,
+              sameAs: [site.github, site.linkedin],
+              knowsAbout: [
+                "Retrieval augmented generation",
+                "Large language model applications",
+                "Python",
+                "FastAPI",
+                "Next.js",
+                "TypeScript",
+              ],
+              ...(siteUrl ? { url: siteUrl } : {}),
+            }),
           }}
         />
       </head>

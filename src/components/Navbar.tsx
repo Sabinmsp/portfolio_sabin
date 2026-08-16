@@ -2,14 +2,15 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { Menu, X, Sun, Moon } from "lucide-react";
+import { Menu, X, Sun, Moon, Download } from "lucide-react";
 import { useTheme } from "./ThemeProvider";
+import { site } from "@/data/site";
 
 const navLinks = [
-  { name: "Index", href: "#home", key: "00" },
   { name: "Work", href: "#work", key: "01" },
-  { name: "Study", href: "#education", key: "02" },
-  { name: "Contact", href: "#contact", key: "03" },
+  { name: "Approach", href: "#approach", key: "02" },
+  { name: "Study", href: "#education", key: "03" },
+  { name: "Contact", href: "#contact", key: "04" },
 ];
 
 export default function Navbar() {
@@ -44,7 +45,7 @@ export default function Navbar() {
       }}
     >
       <div className="page-container flex h-full items-center justify-between">
-        <a href="#home" className="flex items-center gap-2.5">
+        <a href="#home" className="tap flex items-center gap-2.5">
           <img
             src={theme === "dark" ? "/logo-dark.png" : "/logo-light.png"}
             alt=""
@@ -57,16 +58,16 @@ export default function Navbar() {
             className="font-display text-[1.0625rem] font-semibold tracking-tight"
             style={{ color: "var(--text-heading)" }}
           >
-            Sabin Pradhan
+            {site.name}
           </span>
         </a>
 
-        <div className="hidden items-center gap-8 md:flex">
+        <div className="hidden items-center gap-6 md:flex lg:gap-8">
           {navLinks.map((link) => (
             <a
               key={link.name}
               href={link.href}
-              className="group meta-plain flex items-baseline gap-1.5 transition-colors"
+              className="tap group meta-plain gap-1.5 transition-colors"
             >
               <span
                 aria-hidden
@@ -80,6 +81,20 @@ export default function Navbar() {
               </span>
             </a>
           ))}
+
+          <a
+            href={site.resume}
+            download
+            className="tap meta-plain gap-2 px-3 transition-colors hover:text-[var(--accent)]"
+            style={{
+              color: "var(--text-heading)",
+              border: "var(--rule-hair) solid var(--border-strong)",
+              borderRadius: "var(--radius)",
+            }}
+          >
+            <Download className="h-4 w-4" aria-hidden />
+            Resume
+          </a>
 
           <button
             onClick={toggle}
@@ -162,7 +177,7 @@ export default function Navbar() {
                   key={link.name}
                   href={link.href}
                   onClick={() => setIsOpen(false)}
-                  className="meta-plain flex items-baseline gap-3 py-3.5"
+                  className="meta-plain flex items-center gap-3 py-4"
                   style={{
                     color: "var(--text-heading)",
                     borderTop: "var(--rule-hair) solid var(--border)",
@@ -174,6 +189,20 @@ export default function Navbar() {
                   {link.name}
                 </a>
               ))}
+
+              <a
+                href={site.resume}
+                download
+                onClick={() => setIsOpen(false)}
+                className="meta-plain flex items-center gap-3 py-4"
+                style={{
+                  color: "var(--accent)",
+                  borderTop: "var(--rule-hair) solid var(--border)",
+                }}
+              >
+                <Download className="h-[18px] w-[18px]" aria-hidden />
+                Download resume
+              </a>
             </div>
           </motion.div>
         ) : null}
