@@ -6,10 +6,10 @@ import { ArrowDown, Download, Github, Linkedin, Mail } from "lucide-react";
 const STACK = [
   "Python",
   "FastAPI",
-  "Next.js",
-  "TypeScript",
+  "LangChain",
   "RAG",
-  "Ollama",
+  "pgvector",
+  "QLoRA",
 ];
 
 export default function Hero() {
@@ -56,16 +56,19 @@ export default function Hero() {
           </div>
 
           <h1 className="heading text-3xl md:text-5xl lg:text-[3.25rem]">
-            I build applied AI apps — career matching, gym coaching, and robot
-            control.
+            AI Systems Engineer building production-ready LLM systems and
+            RAG pipelines.
           </h1>
 
           <p
             className="mt-5 max-w-2xl text-[15px] leading-relaxed md:text-base"
             style={{ color: "var(--text-muted)" }}
           >
-            Master of IT (AI) student. I ship small, working systems: CareerOS,
-            Gym AI Coach, and an AI RC car simulator.
+            I specialize in scalable LLM architecture, advanced RAG pipelines,
+            and production-ready AI infrastructure — end-to-end GenAI systems
+            optimized for latency, token efficiency, and deterministic outputs.
+            I'm passionate about bridging the gap between AI prototypes and
+            high-performance, enterprise-grade deployment. Based in Darwin, NT.
           </p>
 
           <p
@@ -77,7 +80,7 @@ export default function Hero() {
 
           <div className="mt-8 flex flex-wrap items-center gap-4">
             <a
-              href="/AI Engineer Resume_Sabin_Pradhan.pdf"
+              href="/Sabin_Pradhan_Resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 border px-4 py-2 text-sm font-medium transition-colors hover:border-[var(--border-hover)]"
@@ -126,13 +129,13 @@ export default function Hero() {
       </div>
 
       <motion.a
-        href="#experience"
+        href="#skills"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.6, duration: 0.4 }}
         className="absolute bottom-6 left-1/2 -translate-x-1/2 transition-colors hover:text-accent"
         style={{ color: "var(--text-faint)" }}
-        aria-label="Scroll to projects"
+        aria-label="Scroll to skills"
       >
         <ArrowDown className="h-5 w-5" />
       </motion.a>

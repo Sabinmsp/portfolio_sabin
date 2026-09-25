@@ -24,7 +24,7 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "Sabin Pradhan | AI Engineer",
   description:
-    "Portfolio of Sabin Pradhan — CareerOS, Gym AI Coach, and an AI RC car simulator.",
+    "Sabin Pradhan — AI Engineer specializing in LLM architecture, RAG pipelines, and production AI infrastructure.",
 };
 
 export default function RootLayout({
