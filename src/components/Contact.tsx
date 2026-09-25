@@ -163,8 +163,8 @@ export default function Contact() {
               className="mt-2 text-sm leading-relaxed md:text-[15px]"
               style={{ color: "var(--text-muted)" }}
             >
-              Open to AI engineering roles and collaborations. Prefer email or
-              the form — I respond within a few days.
+              Open to AI engineering roles. Email me or use the form and I'll
+              reply within a few days.
             </p>
 
             <a
@@ -331,7 +331,7 @@ export default function Contact() {
               ) : status === "error" ? (
                 <>
                   <AlertCircle className="h-4 w-4" />
-                  Failed — try again
+                  Failed. Try again.
                 </>
               ) : (
                 <>

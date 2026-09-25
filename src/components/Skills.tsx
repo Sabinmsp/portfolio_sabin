@@ -5,59 +5,20 @@ import { motion, useInView } from "framer-motion";
 
 const skillGroups = [
   {
-    category: "AI Ecosystem & LLMs",
-    items: [
-      "LangChain",
-      "OpenAI API",
-      "Anthropic Claude",
-      "OpenRouter",
-      "Hugging Face (Transformers, PEFT, TRL)",
-      "Sentence Transformers",
-      "MediaPipe",
-    ],
+    category: "AI",
+    items: "RAG, LangChain, OpenAI and Claude APIs, Hugging Face, QLoRA fine-tuning",
   },
   {
-    category: "GenAI Architecture",
-    items: [
-      "RAG Pipelines",
-      "Agentic Workflows",
-      "Tool Calling",
-      "Semantic Search",
-      "Embedding Models",
-      "JSON Structured Outputs",
-      "LLM Fine-Tuning (QLoRA, 4-bit Quantization)",
-    ],
+    category: "Backend",
+    items: "Python, FastAPI, TypeScript, Node.js, REST APIs, AWS",
   },
   {
-    category: "Backend & Cloud",
-    items: [
-      "Python (FastAPI)",
-      "TypeScript (Node.js)",
-      "AWS / Cloud Deployments",
-      "REST APIs",
-      "Stateless Architecture",
-    ],
+    category: "Data",
+    items: "PostgreSQL, pgvector, FAISS, Qdrant, MongoDB, Redis",
   },
   {
-    category: "Data & Vector DBs",
-    items: [
-      "PostgreSQL (pgvector)",
-      "FAISS",
-      "Qdrant",
-      "MongoDB",
-      "Redis (Caching)",
-    ],
-  },
-  {
-    category: "MLOps & Infra",
-    items: [
-      "Docker",
-      "CI/CD (GitHub Actions)",
-      "LLM Observability",
-      "Cloud GPU Training",
-      "Git",
-      "Next.js / React",
-    ],
+    category: "Tools",
+    items: "Docker, GitHub Actions, Git, Next.js, React",
   },
 ];
 
@@ -72,34 +33,29 @@ export default function Skills() {
           initial={{ opacity: 0, y: 10 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.4 }}
-          className="heading mb-8 text-2xl md:mb-10 md:text-3xl"
+          className="heading mb-6 text-2xl md:mb-8 md:text-3xl"
         >
           Skills
         </motion.h2>
 
-        <div className="divide-y" style={{ borderColor: "var(--border)" }}>
-          {skillGroups.map((group, i) => (
-            <motion.div
-              key={group.category}
-              initial={{ opacity: 0, y: 8 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.35, delay: 0.05 * i }}
-              className="grid gap-3 py-5 first:pt-0 last:pb-0 sm:grid-cols-[200px_1fr] sm:gap-6"
-              style={{ borderColor: "var(--border)" }}
-            >
-              <h3 className="heading pt-1 text-sm md:text-base">
-                {group.category}
-              </h3>
-              <div className="flex flex-wrap gap-1.5">
-                {group.items.map((item) => (
-                  <span key={item} className="stack-label">
-                    {item}
-                  </span>
-                ))}
-              </div>
-            </motion.div>
+        <motion.dl
+          initial={{ opacity: 0, y: 8 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.35, delay: 0.08 }}
+          className="grid max-w-4xl gap-x-6 gap-y-3 sm:grid-cols-[100px_1fr]"
+        >
+          {skillGroups.map((group) => (
+            <div key={group.category} className="contents">
+              <dt className="label-mono pt-0.5">{group.category}</dt>
+              <dd
+                className="mb-2 text-sm leading-relaxed sm:mb-0 md:text-[15px]"
+                style={{ color: "var(--text)" }}
+              >
+                {group.items}
+              </dd>
+            </div>
           ))}
-        </div>
+        </motion.dl>
       </div>
     </section>
   );

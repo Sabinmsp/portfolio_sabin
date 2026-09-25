@@ -300,6 +300,105 @@ a.link-accent:hover {
   }
 }
 
+/* ——— Hero: its own space, apart from the flat sections below ——— */
+.hero-stage {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border);
+}
+
+/* Faint grid, faded out toward the edges */
+.hero-stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 56px 56px;
+  background-position: center center;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 45%, #000 30%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 45%, #000 30%, transparent 100%);
+}
+
+/* Accent glow behind the portrait; grows with scroll (see Hero.tsx) */
+.hero-glow {
+  position: absolute;
+  left: 50%;
+  top: 34%;
+  width: min(720px, 120vw);
+  aspect-ratio: 1;
+  margin-left: calc(min(720px, 120vw) / -2);
+  margin-top: calc(min(720px, 120vw) / -2);
+  z-index: -1;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--color-accent) 32%, transparent) 0%,
+    transparent 60%
+  );
+  pointer-events: none;
+}
+
+/* Small glow that follows the visitor's finger or cursor */
+.hero-spotlight {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 360px;
+  height: 360px;
+  margin: -180px 0 0 -180px;
+  z-index: -1;
+  border-radius: 9999px;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--color-accent) 28%, transparent) 0%,
+    transparent 65%
+  );
+  pointer-events: none;
+}
+
+.hero-portrait {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--color-accent) 45%, transparent),
+    0 0 0 8px var(--bg),
+    0 0 0 9px var(--border),
+    0 20px 60px -10px color-mix(in srgb, var(--color-accent) 35%, transparent);
+}
+
+.hero-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: 1px solid var(--border-hover);
+  border-radius: 9999px;
+  padding: 0.5rem 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--text-heading);
+  background: color-mix(in srgb, var(--bg) 70%, transparent);
+  backdrop-filter: blur(6px);
+  transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+}
+
+.hero-pill:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.hero-pill--primary {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #fff;
+}
+
+.hero-pill--primary:hover {
+  background: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+  color: #fff;
+}
+
 /* Subtle fade-up (scroll / enter) — no bounce */
 @keyframes fade-up {
   from {

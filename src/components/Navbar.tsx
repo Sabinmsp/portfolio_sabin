@@ -6,7 +6,7 @@ import { Menu, X, Sun, Moon } from "lucide-react";
 import { useTheme } from "./ThemeProvider";
 
 const navLinks = [
-  { name: "Home", href: "#home" },
+  { name: "About", href: "#about" },
   { name: "Skills", href: "#skills" },
   { name: "Projects", href: "#projects" },
   { name: "Education", href: "#education" },
@@ -42,7 +42,7 @@ export default function Navbar() {
       }
     >
       <div className="page-container flex items-center justify-between py-3.5 md:py-4">
-        <a href="#home" className="flex items-center gap-2.5 group">
+        <a href="#about" className="flex items-center gap-2.5 group">
           <img
             src={theme === "dark" ? "/logo-dark.png" : "/logo-light.png"}
             alt="S"

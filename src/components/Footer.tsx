@@ -11,7 +11,7 @@ export default function Footer() {
       style={{ borderTop: "1px solid var(--border)" }}
     >
       <div className="page-container flex flex-col items-center justify-between gap-3 sm:flex-row">
-        <a href="#home" className="flex items-center gap-2">
+        <a href="#about" className="flex items-center gap-2">
           <img
             src={theme === "dark" ? "/logo-dark.png" : "/logo-light.png"}
             alt="S"
