@@ -25,6 +25,7 @@ export default function Contact() {
     "idle"
   );
   const [notice, setNotice] = useState<string | null>(null);
+  const [showMailFallback, setShowMailFallback] = useState(false);
   const lastSubmitAt = useRef(0);
 
   const handleSubmit = useCallback(
@@ -39,9 +40,8 @@ export default function Contact() {
 
       const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY?.trim();
       if (!accessKey) {
-        setNotice(
-          "Contact form is not configured (missing NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY)."
-        );
+        setNotice("The contact form isn't available right now.");
+        setShowMailFallback(true);
         setStatus("error");
         setTimeout(() => setStatus("idle"), 4000);
         return;
@@ -309,6 +309,18 @@ export default function Contact() {
                 role="status"
               >
                 {notice}
+                {showMailFallback ? (
+                  <>
+                    {" "}Please email me at{" "}
+                    <a
+                      href="mailto:sabinmsp@gmail.com"
+                      className="text-accent underline"
+                    >
+                      sabinmsp@gmail.com
+                    </a>
+                    .
+                  </>
+                ) : null}
               </p>
             ) : null}
 

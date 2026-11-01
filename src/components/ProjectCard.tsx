@@ -7,6 +7,7 @@ export type ProjectItem = {
   title: string;
   summary: string;
   result?: string;
+  client?: boolean;
   github?: string;
 };
 
@@ -32,6 +33,11 @@ export default function ProjectCard({
           {item.result ? (
             <span className="metric-mono text-xs text-accent md:text-[13px]">
               {item.result}
+            </span>
+          ) : null}
+          {item.client ? (
+            <span className="metric-mono text-xs text-accent md:text-[13px]">
+              Client project
             </span>
           ) : null}
         </div>

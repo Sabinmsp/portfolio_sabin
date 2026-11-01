@@ -12,23 +12,34 @@ interface EducationEntry {
 
 const projects: ProjectItem[] = [
   {
+    title: "SignBridge: Text-to-Auslan Prototype",
+    result: "83.9% of words signed (30 test sentences)",
+    summary:
+      "Turns spoken, typed or PDF text into recorded Auslan signs on a 2D figure, using 3,215 signs extracted with MediaPipe, with fingerspelling for words that have no sign. An optional Claude rewrite of PDF key points has every fact re-checked against the source.",
+    github: "https://github.com/Sabinmsp/coding_project_auslan",
+  },
+  {
+    title: "Café Online Ordering and Payments",
+    client: true,
+    summary:
+      "Built online ordering and checkout for a Darwin café on its existing Square system. Prices are recalculated on the server, card details go straight to Square, and orders are confirmed only by signed Square webhooks. Next.js, FastAPI, Square.",
+  },
+  {
+    title: "Website for an NDIS Provider",
+    client: true,
+    summary:
+      "Designed and built a Darwin NDIS provider's website from the client's brief and deployed it on Vercel.",
+  },
+  {
     title: "Customer Support Agent",
-    result: "~30% fewer hallucinations",
     summary:
       "Built an e-commerce support agent using FastAPI, LangChain and RAG, with tool calling for order lookups.",
   },
   {
     title: "Gym Coach AI",
-    result: "40% lower latency",
     summary:
-      "Built a RAG fitness assistant using Python, FAISS and PyMuPDF that tailors answers to each user's profile.",
+      "Built a fitness coach app whose RAG layer tailors answers to each user's profile, with vector search (in-memory or Qdrant), switchable OpenAI/Ollama embeddings, a response cache and rate limiting. Next.js and TypeScript.",
     github: "https://github.com/Sabinmsp/gym-ai-coach",
-  },
-  {
-    title: "Text-to-Sign Tool",
-    summary:
-      "Built a Python tool that turns English text into Auslan signing on a 2D avatar using embeddings and MediaPipe.",
-    github: "https://github.com/Sabinmsp/coding_project_auslan",
   },
   {
     title: "Qwen3-14B Fine-Tuning",

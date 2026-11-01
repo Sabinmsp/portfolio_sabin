@@ -14,7 +14,7 @@ const skillGroups = [
   },
   {
     category: "Data",
-    items: "PostgreSQL, pgvector, FAISS, Qdrant, MongoDB, Redis",
+    items: "PostgreSQL, pgvector, Qdrant, Redis",
   },
   {
     category: "Tools",
