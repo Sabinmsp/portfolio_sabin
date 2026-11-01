@@ -399,6 +399,79 @@ a.link-accent:hover {
   color: #fff;
 }
 
+/* Hero "ask about me" card */
+.ask-card {
+  position: relative;
+  border: 1px solid var(--border-hover);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--bg-card) 88%, transparent);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 30px 80px -30px color-mix(in srgb, var(--color-accent) 40%, transparent);
+  overflow: hidden;
+}
+
+.ask-card__bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.ask-card__dots {
+  display: inline-flex;
+  gap: 6px;
+}
+
+.ask-card__dots i {
+  width: 9px;
+  height: 9px;
+  border-radius: 9999px;
+  background: var(--border-hover);
+}
+
+.ask-chip {
+  border: 1px solid var(--border);
+  border-radius: 9999px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+  cursor: pointer;
+}
+
+.ask-chip:hover {
+  border-color: var(--border-hover);
+  color: var(--text-heading);
+}
+
+.ask-chip--active {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  background: var(--color-accent-muted);
+}
+
+.ask-caret {
+  display: inline-block;
+  width: 2px;
+  height: 1.1em;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  background: var(--color-accent);
+  animation: ask-blink 1s steps(1) infinite;
+}
+
+@keyframes ask-blink {
+  50% { opacity: 0; }
+}
+
+.ask-card__foot {
+  border-top: 1px solid var(--border);
+  padding: 0.75rem 1rem;
+  font-size: 0.75rem;
+  color: var(--text-faint);
+}
+
 /* Subtle fade-up (scroll / enter) — no bounce */
 @keyframes fade-up {
   from {
