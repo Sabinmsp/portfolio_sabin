@@ -36,6 +36,7 @@ const projects: ProjectItem[] = [
     title: "Customer Support Agent",
     summary:
       "Built an e-commerce support agent using FastAPI, LangChain and RAG, with tool calling for order lookups.",
+    github: "https://github.com/sidskarkii/Capstone-Final",
   },
   {
     title: "Gym Coach AI",
