@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Github } from "lucide-react";
+import { ExternalLink, Github } from "lucide-react";
 
 export type ProjectItem = {
   title: string;
@@ -9,7 +9,16 @@ export type ProjectItem = {
   result?: string;
   client?: boolean;
   github?: string;
+  link?: string;
 };
+
+const linkClass =
+  "inline-flex h-fit w-fit items-center gap-1.5 border px-3 py-1.5 text-xs font-medium transition-colors hover:border-[var(--border-hover)] hover:text-accent";
+const linkStyle = {
+  color: "var(--text-heading)",
+  borderColor: "var(--border)",
+  borderRadius: 3,
+} as const;
 
 export default function ProjectCard({
   item,
@@ -49,21 +58,33 @@ export default function ProjectCard({
         </p>
       </div>
 
-      {item.github ? (
-        <a
-          href={item.github}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex h-fit w-fit items-center gap-1.5 border px-3 py-1.5 text-xs font-medium transition-colors hover:border-[var(--border-hover)] hover:text-accent"
-          style={{
-            color: "var(--text-heading)",
-            borderColor: "var(--border)",
-            borderRadius: 3,
-          }}
-        >
-          <Github className="h-3 w-3" />
-          Code
-        </a>
+      {item.github || item.link ? (
+        <div className="flex h-fit flex-wrap gap-2">
+          {item.link ? (
+            <a
+              href={item.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={linkClass}
+              style={linkStyle}
+            >
+              <ExternalLink className="h-3 w-3" />
+              Live site
+            </a>
+          ) : null}
+          {item.github ? (
+            <a
+              href={item.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={linkClass}
+              style={linkStyle}
+            >
+              <Github className="h-3 w-3" />
+              Code
+            </a>
+          ) : null}
+        </div>
       ) : null}
     </motion.article>
   );

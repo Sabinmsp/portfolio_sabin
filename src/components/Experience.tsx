@@ -21,12 +21,14 @@ const projects: ProjectItem[] = [
   {
     title: "Café Online Ordering and Payments",
     client: true,
+    link: "https://www.postiecoffee.com.au/",
     summary:
       "Built online ordering and checkout for a Darwin café on its existing Square system. Prices are recalculated on the server, card details go straight to Square, and orders are confirmed only by signed Square webhooks. Next.js, FastAPI, Square.",
   },
   {
     title: "Website for an NDIS Provider",
     client: true,
+    link: "https://sweet-care-virid.vercel.app/",
     summary:
       "Designed and built a Darwin NDIS provider's website from the client's brief and deployed it on Vercel.",
   },
