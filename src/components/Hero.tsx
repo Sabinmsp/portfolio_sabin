@@ -12,7 +12,7 @@ import {
 import { ArrowDown, ArrowRight, ArrowUpRight } from "lucide-react";
 
 const LINKS = [
-  { label: "Resume", href: "/Sabin_Pradhan_Resume.pdf" },
+  { label: "Resume", href: "/Sabin_Pradhan-Resume.pdf" },
   { label: "GitHub", href: "https://github.com/Sabinmsp" },
   {
     label: "LinkedIn",
