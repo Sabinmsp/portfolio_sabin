@@ -6,6 +6,7 @@ import { MoreHorizontal, X, Sun, Moon, ArrowUpRight } from "lucide-react";
 import { useTheme } from "./ThemeProvider";
 
 const navLinks = [
+  { name: "Home", href: "#top" },
   { name: "About", href: "#about" },
   { name: "Ask me", href: "#ask" },
   { name: "Skills", href: "#skills" },
@@ -49,12 +50,14 @@ export default function Navbar() {
         aria-label="Main"
         className="nav-pill flex items-center justify-between py-2 pr-2 pl-4"
       >
-        <a
-          href="#about"
-          className="font-display text-lg font-bold tracking-tight"
+        <motion.a
+          href="#top"
+          className="font-display inline-block text-lg font-bold tracking-tight"
+          whileHover={{ rotate: [0, -12, 9, -5, 0], scale: 1.06 }}
+          transition={{ duration: 0.6 }}
         >
           Sabin
-        </a>
+        </motion.a>
 
         <div className="flex items-center gap-1.5">
           <button

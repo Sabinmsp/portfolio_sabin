@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import ProjectCard, { type ProjectItem } from "./ProjectCard";
 import Reveal, { SectionHeader } from "./Reveal";
@@ -135,10 +136,14 @@ export default function Experience() {
           />
 
           <ol className="relative grid gap-12 md:grid-cols-3 md:gap-8">
-            <span
+            <motion.span
               aria-hidden
-              className="absolute top-[1.125rem] bottom-0 left-[1.125rem] w-px md:top-[1.125rem] md:right-0 md:bottom-auto md:left-0 md:h-px md:w-auto"
+              className="absolute top-[1.125rem] bottom-0 left-[1.125rem] w-px origin-top md:right-0 md:bottom-auto md:left-0 md:h-px md:w-auto md:origin-left"
               style={{ background: "var(--ink)" }}
+              initial={{ scale: 0 }}
+              whileInView={{ scale: 1 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
             />
             {journey.map((item, i) => (
               <li key={item.title} className="relative">

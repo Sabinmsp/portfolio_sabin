@@ -78,7 +78,7 @@ export default function Footer() {
           Thanks for scrolling.
         </p>
         <a
-          href="#about"
+          href="#top"
           className="inline-flex items-center gap-2 text-sm hover:underline"
         >
           Back to top

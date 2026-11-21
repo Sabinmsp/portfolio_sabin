@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import Reveal, { SectionHeader } from "./Reveal";
 
 const skillGroups = [
@@ -54,20 +55,34 @@ export default function Skills() {
         <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
           {skillGroups.map((group, i) => (
             <Reveal key={group.category} delay={i * 0.06}>
-              <div
-                className="border-t-2 pt-6"
-                style={{ borderColor: "var(--border-strong)" }}
-              >
+              <div className="relative pt-6">
+                <motion.span
+                  aria-hidden
+                  className="absolute top-0 left-0 h-[2px] w-full origin-left"
+                  style={{ background: "var(--border-strong)" }}
+                  initial={{ scaleX: 0 }}
+                  whileInView={{ scaleX: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.9, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                />
                 <h3 className="heading text-3xl">{group.category}</h3>
                 <p className="muted mt-2 text-sm">{group.blurb}</p>
                 <ul className="mt-6 flex flex-wrap gap-2">
-                  {group.items.map((item) => (
-                    <li
+                  {group.items.map((item, j) => (
+                    <motion.li
                       key={item}
+                      initial={{ opacity: 0, y: 12, scale: 0.94 }}
+                      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                      viewport={{ once: true, margin: "-40px" }}
+                      transition={{
+                        duration: 0.45,
+                        delay: 0.15 + i * 0.08 + j * 0.05,
+                        ease: [0.22, 1, 0.36, 1],
+                      }}
                       className={`chip ${group.key.includes(item) ? "chip--ink" : ""}`}
                     >
                       {item}
-                    </li>
+                    </motion.li>
                   ))}
                 </ul>
               </div>
