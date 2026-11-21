@@ -1,8 +1,19 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
 import { useRef, useState, useCallback } from "react";
-import { Send, Mail, CheckCircle, Loader2, AlertCircle } from "lucide-react";
+import {
+  ArrowUpRight,
+  Check,
+  CheckCircle,
+  Copy,
+  Github,
+  Linkedin,
+  Loader2,
+  AlertCircle,
+} from "lucide-react";
+import Reveal from "./Reveal";
+
+const EMAIL = "sabinmsp@gmail.com";
 
 const WEB3FORMS_SUBMIT_URL = "https://api.web3forms.com/submit";
 const CLIENT_COOLDOWN_MS = 45_000;
@@ -19,8 +30,7 @@ function web3Message(data: Record<string, unknown>): string {
 }
 
 export default function Contact() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-80px" });
+  const [copied, setCopied] = useState(false);
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
     "idle"
   );
@@ -136,81 +146,78 @@ export default function Contact() {
     []
   );
 
-  const fieldClass =
-    "w-full px-3 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-accent/40 transition-colors";
-  const fieldStyle = {
-    background: "var(--bg)",
-    border: "1px solid var(--border)",
-    color: "var(--text)",
-    borderRadius: 4,
-  } as const;
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(EMAIL);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      window.location.href = `mailto:${EMAIL}`;
+    }
+  };
 
   return (
-    <section
-      id="contact"
-      className="section-y relative min-h-[min(100vh,720px)] flex items-center"
-    >
-      <div className="page-container w-full" ref={ref}>
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.4 }}
-          className="grid gap-8 lg:grid-cols-[1fr_1.4fr] lg:gap-12 lg:items-start"
-        >
-          <div>
-            <h2 className="heading text-2xl md:text-3xl">Get in touch</h2>
-            <p
-              className="mt-2 text-sm leading-relaxed md:text-[15px]"
-              style={{ color: "var(--text-muted)" }}
-            >
-              Open to AI engineering roles. Email me or use the form and I'll
-              reply within a few days.
-            </p>
+    <section id="contact" className="section-y">
+      <div className="page-container grid gap-14 lg:grid-cols-[1fr_1.2fr] lg:gap-20">
+        <Reveal>
+          <h2 className="display text-6xl sm:text-7xl md:text-8xl">
+            Let&rsquo;s talk.
+          </h2>
+          <p className="muted mt-7 max-w-md text-lg leading-relaxed">
+            Hiring for an AI or full-stack role, or need something built? My
+            inbox is open and I reply within a few days.
+          </p>
 
+          <div className="mt-9 flex flex-wrap items-center gap-3">
             <a
-              href="mailto:sabinmsp@gmail.com"
-              className="mt-5 inline-flex items-center gap-2 text-sm transition-colors hover:text-accent"
-              style={{ color: "var(--text-heading)" }}
+              href={`mailto:${EMAIL}`}
+              className="font-display inline-flex items-center gap-2 text-xl font-semibold underline-offset-4 hover:underline md:text-2xl"
+              style={{ color: "var(--ink)" }}
             >
-              <Mail className="h-4 w-4 text-accent" />
-              <span className="font-mono text-[13px]">sabinmsp@gmail.com</span>
+              {EMAIL}
+              <ArrowUpRight className="h-5 w-5" />
             </a>
-
-            <div className="mt-4 flex gap-3">
-              {[
-                { label: "GitHub", href: "https://github.com/Sabinmsp" },
-                {
-                  label: "LinkedIn",
-                  href: "https://www.linkedin.com/in/sabin-pradhan-652b333b6/",
-                },
-              ].map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="label-mono border px-2.5 py-1.5 transition-colors hover:border-[var(--border-hover)] hover:text-accent"
-                  style={{
-                    color: "var(--text-muted)",
-                    borderColor: "var(--border)",
-                    borderRadius: 3,
-                  }}
-                >
-                  {link.label}
-                </a>
-              ))}
-            </div>
+            <button
+              type="button"
+              onClick={copyEmail}
+              className="grid h-11 w-11 place-items-center rounded-lg border transition-colors hover:border-[var(--ink)]"
+              style={{ borderColor: "var(--border)", color: "var(--ink)" }}
+              aria-label={copied ? "Email copied" : "Copy email address"}
+            >
+              {copied ? (
+                <Check className="h-4 w-4" />
+              ) : (
+                <Copy className="h-4 w-4" />
+              )}
+            </button>
           </div>
 
-          <form
-            onSubmit={handleSubmit}
-            className="relative space-y-4 border p-5 md:p-6"
-            style={{
-              background: "var(--bg-card)",
-              borderColor: "var(--border)",
-              borderRadius: 4,
-            }}
-          >
+          <div className="mt-8 flex flex-wrap gap-6">
+            <a
+              href="https://www.linkedin.com/in/sabin-pradhan-652b333b6/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-display inline-flex items-center gap-2 font-medium hover:underline"
+              style={{ color: "var(--ink)" }}
+            >
+              <Linkedin className="h-4 w-4" />
+              LinkedIn
+            </a>
+            <a
+              href="https://github.com/Sabinmsp"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-display inline-flex items-center gap-2 font-medium hover:underline"
+              style={{ color: "var(--ink)" }}
+            >
+              <Github className="h-4 w-4" />
+              GitHub
+            </a>
+          </div>
+        </Reveal>
+
+        <Reveal delay={0.1}>
+          <form onSubmit={handleSubmit} className="relative space-y-8">
             <input
               type="text"
               name="_honey"
@@ -222,32 +229,24 @@ export default function Contact() {
               defaultValue=""
             />
 
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid gap-8 sm:grid-cols-2">
               <div>
-                <label
-                  htmlFor="name"
-                  className="label-mono mb-1.5 block"
-                >
-                  Name
+                <label htmlFor="name" className="heading block text-sm">
+                  Your name
                 </label>
                 <input
                   id="name"
                   name="name"
                   type="text"
                   required
-                  minLength={1}
                   maxLength={120}
-                  placeholder="Your name"
-                  className={fieldClass}
-                  style={fieldStyle}
+                  placeholder="What should I call you?"
+                  className="field"
                 />
               </div>
               <div>
-                <label
-                  htmlFor="email"
-                  className="label-mono mb-1.5 block"
-                >
-                  Email
+                <label htmlFor="email" className="heading block text-sm">
+                  Email address
                 </label>
                 <input
                   id="email"
@@ -256,17 +255,13 @@ export default function Contact() {
                   required
                   maxLength={254}
                   placeholder="you@company.com"
-                  className={fieldClass}
-                  style={fieldStyle}
+                  className="field"
                 />
               </div>
             </div>
 
             <div>
-              <label
-                htmlFor="subject"
-                className="label-mono mb-1.5 block"
-              >
+              <label htmlFor="subject" className="heading block text-sm">
                 Subject
               </label>
               <input
@@ -274,49 +269,39 @@ export default function Contact() {
                 name="subject"
                 type="text"
                 required
-                minLength={1}
                 maxLength={200}
-                placeholder="Role, project, or question"
-                className={fieldClass}
-                style={fieldStyle}
+                placeholder="Role, project or question"
+                className="field"
               />
             </div>
 
             <div>
-              <label
-                htmlFor="message"
-                className="label-mono mb-1.5 block"
-              >
-                Message
+              <label htmlFor="message" className="heading block text-sm">
+                What do you have in mind?
               </label>
               <textarea
                 id="message"
                 name="message"
                 required
-                minLength={1}
                 maxLength={5000}
                 rows={4}
-                placeholder="What are you building? (10+ characters)"
-                className={`${fieldClass} resize-none`}
-                style={fieldStyle}
+                placeholder="A little about the role or project (10+ characters)"
+                className="field resize-none"
               />
             </div>
 
             {notice ? (
-              <p
-                className="text-center text-sm"
-                style={{ color: "var(--text-muted)" }}
-                role="status"
-              >
+              <p className="muted text-sm" role="status">
                 {notice}
                 {showMailFallback ? (
                   <>
                     {" "}Please email me at{" "}
                     <a
-                      href="mailto:sabinmsp@gmail.com"
-                      className="text-accent underline"
+                      href={`mailto:${EMAIL}`}
+                      className="underline"
+                      style={{ color: "var(--ink)" }}
                     >
-                      sabinmsp@gmail.com
+                      {EMAIL}
                     </a>
                     .
                   </>
@@ -327,33 +312,32 @@ export default function Contact() {
             <button
               type="submit"
               disabled={status === "sending"}
-              className="inline-flex w-full items-center justify-center gap-2 bg-accent px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent-hover disabled:opacity-70"
-              style={{ borderRadius: 4 }}
+              className="btn-ink disabled:opacity-70"
             >
               {status === "sending" ? (
                 <>
+                  Sending
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  Sending…
                 </>
               ) : status === "sent" ? (
                 <>
+                  Sent, thank you
                   <CheckCircle className="h-4 w-4" />
-                  Sent
                 </>
               ) : status === "error" ? (
                 <>
+                  Not sent. Try again
                   <AlertCircle className="h-4 w-4" />
-                  Failed. Try again.
                 </>
               ) : (
                 <>
-                  <Send className="h-4 w-4" />
                   Send message
+                  <ArrowUpRight className="h-4 w-4" />
                 </>
               )}
             </button>
           </form>
-        </motion.div>
+        </Reveal>
       </div>
     </section>
   );

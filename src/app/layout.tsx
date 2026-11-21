@@ -22,7 +22,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Sabin Pradhan | AI Engineer",
+  title: "Sabin Pradhan | AI Engineer & Full-Stack Developer",
   description:
     "Sabin Pradhan, AI Engineer. RAG systems, LLM applications and backend APIs with Python and FastAPI.",
 };
@@ -35,7 +35,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      data-theme="dark"
+      data-theme="light"
       className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`}
       suppressHydrationWarning
     >
@@ -47,7 +47,7 @@ export default function RootLayout({
         {/* Prevent flash of wrong theme before hydration */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark"){document.documentElement.setAttribute("data-theme",t);}else{document.documentElement.setAttribute("data-theme","dark");}}catch(e){}})();`,
+            __html: `(function(){try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark"){document.documentElement.setAttribute("data-theme",t);}else{document.documentElement.setAttribute("data-theme","light");}}catch(e){}})();`,
           }}
         />
       </head>

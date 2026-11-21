@@ -1,14 +1,8 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { ArrowUpRight } from "lucide-react";
 import ProjectCard, { type ProjectItem } from "./ProjectCard";
-
-interface EducationEntry {
-  year: string;
-  title: string;
-  subtitle: string;
-}
+import Reveal, { SectionHeader } from "./Reveal";
 
 const projects: ProjectItem[] = [
   {
@@ -52,53 +46,74 @@ const projects: ProjectItem[] = [
   },
 ];
 
-const education: EducationEntry[] = [
+type JourneyItem = {
+  badge?: string;
+  when?: string;
+  title: string;
+  org: string;
+  place?: string;
+  note?: string;
+  current?: boolean;
+};
+
+const journey: JourneyItem[] = [
   {
-    year: "2026 to 2027",
+    badge: "Current",
+    when: "2026 to 2027",
     title: "Master of Information Technology (Artificial Intelligence)",
-    subtitle: "Charles Darwin University, Darwin, NT",
+    org: "Charles Darwin University",
+    place: "Darwin, NT",
+    current: true,
   },
   {
-    year: "2023 to 2025",
+    badge: "Client work",
+    title: "Freelance Developer",
+    org: "Darwin clients",
+    note: "Built online ordering and Square payments for a caf\u00e9, and a website for an NDIS provider.",
+  },
+  {
+    when: "2023 to 2025",
     title: "Bachelor of Information Technology",
-    subtitle: "Victoria University, Sydney, NSW",
+    org: "Victoria University",
+    place: "Sydney, NSW",
   },
 ];
 
-function SectionHeading({
-  title,
-  inView,
-}: {
-  title: string;
-  inView: boolean;
-}) {
-  return (
-    <motion.h2
-      initial={{ opacity: 0, y: 10 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.4 }}
-      className="heading mb-8 text-2xl md:mb-10 md:text-3xl"
-    >
-      {title}
-    </motion.h2>
-  );
-}
-
 export default function Experience() {
-  const projectsRef = useRef(null);
-  const educationRef = useRef(null);
-  const projectsInView = useInView(projectsRef, { once: true, margin: "-60px" });
-  const educationInView = useInView(educationRef, {
-    once: true,
-    margin: "-60px",
-  });
-
   return (
     <>
-      <section id="projects" className="section-y relative">
-        <div className="page-container" ref={projectsRef}>
-          <SectionHeading title="Projects" inView={projectsInView} />
-          <div className="divide-y divide-[var(--border)]" style={{ borderColor: "var(--border)" }}>
+      <section id="projects" className="section-y">
+        <div className="page-container">
+          <SectionHeader
+            title={
+              <>
+                Featured
+                <br />
+                Projects
+              </>
+            }
+            aside={
+              <a
+                href="https://github.com/Sabinmsp"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-display inline-flex items-center gap-2 text-base font-semibold"
+                style={{ color: "var(--ink)" }}
+              >
+                GitHub
+                <span className="icon-box !h-7 !w-7">
+                  <ArrowUpRight className="h-3.5 w-3.5" />
+                </span>
+              </a>
+            }
+          >
+            <p className="muted mt-6 max-w-md text-lg">
+              Client work and independent builds. Each one links to the live
+              site or the code where I can share it.
+            </p>
+          </SectionHeader>
+
+          <div className="grid gap-5 md:grid-cols-2">
             {projects.map((item, i) => (
               <ProjectCard key={item.title} item={item} index={i} />
             ))}
@@ -106,24 +121,61 @@ export default function Experience() {
         </div>
       </section>
 
-      <section id="education" className="section-y relative">
-        <div className="page-container" ref={educationRef}>
-          <SectionHeading title="Education" inView={educationInView} />
-          <div className="divide-y" style={{ borderColor: "var(--border)" }}>
-            {education.map((item) => (
-              <div
-                key={item.title}
-                className="grid gap-1 py-5 first:pt-0 last:pb-0 sm:grid-cols-[140px_1fr] sm:gap-6"
-                style={{ borderColor: "var(--border)" }}
-              >
-                <p className="label-mono pt-1">{item.year}</p>
-                <div>
-                  <h3 className="heading text-base md:text-lg">{item.title}</h3>
-                  <p className="mt-0.5 text-sm text-accent">{item.subtitle}</p>
-                </div>
-              </div>
+      <section id="journey" className="section-y">
+        <div className="page-container">
+          <SectionHeader
+            title="Journey."
+            aside={
+              <>
+                Where I&rsquo;ve studied
+                <br />
+                and who I&rsquo;ve built for.
+              </>
+            }
+          />
+
+          <ol className="relative grid gap-12 md:grid-cols-3 md:gap-8">
+            <span
+              aria-hidden
+              className="absolute top-[1.125rem] bottom-0 left-[1.125rem] w-px md:top-[1.125rem] md:right-0 md:bottom-auto md:left-0 md:h-px md:w-auto"
+              style={{ background: "var(--ink)" }}
+            />
+            {journey.map((item, i) => (
+              <li key={item.title} className="relative">
+                <Reveal
+                  delay={i * 0.1}
+                  className="grid grid-cols-[2.25rem_1fr] gap-5 md:block"
+                >
+                  <span
+                    className={`timeline-dot relative ${item.current ? "timeline-dot--current" : ""}`}
+                    aria-hidden
+                  />
+                  <div className="md:mt-7">
+                    <div className="flex flex-wrap items-center gap-2">
+                      {item.badge ? (
+                        <span className="tag">{item.badge}</span>
+                      ) : null}
+                      {item.when ? (
+                        <span className="muted text-sm">{item.when}</span>
+                      ) : null}
+                    </div>
+                    <h3 className="heading mt-3 text-2xl md:text-[1.7rem]">
+                      {item.title}
+                    </h3>
+                    <p className="heading mt-3 text-base">{item.org}</p>
+                    {item.place ? (
+                      <p className="muted text-sm">{item.place}</p>
+                    ) : null}
+                    {item.note ? (
+                      <p className="muted mt-3 max-w-xs text-[15px] leading-relaxed">
+                        {item.note}
+                      </p>
+                    ) : null}
+                  </div>
+                </Reveal>
+              </li>
             ))}
-          </div>
+          </ol>
         </div>
       </section>
     </>

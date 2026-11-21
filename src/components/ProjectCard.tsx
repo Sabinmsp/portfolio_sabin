@@ -1,7 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { ExternalLink, Github } from "lucide-react";
+import { ArrowUpRight, ExternalLink, Github } from "lucide-react";
+import Reveal from "./Reveal";
 
 export type ProjectItem = {
   title: string;
@@ -12,14 +12,6 @@ export type ProjectItem = {
   link?: string;
 };
 
-const linkClass =
-  "inline-flex h-fit w-fit items-center gap-1.5 border px-3 py-1.5 text-xs font-medium transition-colors hover:border-[var(--border-hover)] hover:text-accent";
-const linkStyle = {
-  color: "var(--text-heading)",
-  borderColor: "var(--border)",
-  borderRadius: 3,
-} as const;
-
 export default function ProjectCard({
   item,
   index,
@@ -27,65 +19,78 @@ export default function ProjectCard({
   item: ProjectItem;
   index: number;
 }) {
+  const primary = item.link ?? item.github;
+
   return (
-    <motion.article
-      aria-label={`Project: ${item.title}`}
-      initial={{ opacity: 0, y: 10 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.3, delay: index * 0.05, ease: "easeOut" }}
-      className="grid gap-3 py-6 first:pt-0 last:pb-0 md:grid-cols-[1fr_auto] md:gap-8"
-    >
-      <div>
-        <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-          <h3 className="heading text-lg md:text-xl">{item.title}</h3>
-          {item.result ? (
-            <span className="metric-mono text-xs text-accent md:text-[13px]">
-              {item.result}
-            </span>
-          ) : null}
-          {item.client ? (
-            <span className="metric-mono text-xs text-accent md:text-[13px]">
-              Client project
-            </span>
+    <Reveal delay={(index % 2) * 0.08} className="h-full">
+      <article
+        aria-label={`Project: ${item.title}`}
+        className="project-card h-full"
+      >
+        <div className="flex min-h-[2.1rem] items-start justify-between gap-4">
+          <span className="label-mono">
+            {String(index + 1).padStart(2, "0")}
+          </span>
+          {primary ? (
+            <a
+              href={primary}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="icon-box"
+              aria-label={`Open ${item.title}`}
+            >
+              <ArrowUpRight className="h-4 w-4" />
+            </a>
           ) : null}
         </div>
-        <p
-          className="mt-2 max-w-2xl text-sm leading-relaxed md:text-[15px]"
-          style={{ color: "var(--text-muted)" }}
-        >
+
+        <h3 className="heading mt-6 text-2xl md:text-[1.9rem]">{item.title}</h3>
+
+        {item.client || item.result ? (
+          <div className="mt-3 flex flex-wrap gap-2">
+            {item.client ? <span className="tag">Client project</span> : null}
+            {item.result ? (
+              <span className="tag tag--soft">{item.result}</span>
+            ) : null}
+          </div>
+        ) : null}
+
+        <p className="muted mt-4 flex-1 text-[15px] leading-relaxed">
           {item.summary}
         </p>
-      </div>
 
-      {item.github || item.link ? (
-        <div className="flex h-fit flex-wrap gap-2">
-          {item.link ? (
-            <a
-              href={item.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={linkClass}
-              style={linkStyle}
-            >
-              <ExternalLink className="h-3 w-3" />
-              Live site
-            </a>
-          ) : null}
-          {item.github ? (
-            <a
-              href={item.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={linkClass}
-              style={linkStyle}
-            >
-              <Github className="h-3 w-3" />
-              Code
-            </a>
-          ) : null}
-        </div>
-      ) : null}
-    </motion.article>
+        {item.link || item.github ? (
+          <div
+            className="mt-6 flex flex-wrap gap-5 border-t pt-4"
+            style={{ borderColor: "var(--border)" }}
+          >
+            {item.link ? (
+              <a
+                href={item.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-display inline-flex items-center gap-1.5 text-sm font-semibold underline-offset-4 hover:underline"
+                style={{ color: "var(--ink)" }}
+              >
+                <ExternalLink className="h-3.5 w-3.5" />
+                Live site
+              </a>
+            ) : null}
+            {item.github ? (
+              <a
+                href={item.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-display inline-flex items-center gap-1.5 text-sm font-semibold underline-offset-4 hover:underline"
+                style={{ color: "var(--ink)" }}
+              >
+                <Github className="h-3.5 w-3.5" />
+                Code
+              </a>
+            ) : null}
+          </div>
+        ) : null}
+      </article>
+    </Reveal>
   );
 }

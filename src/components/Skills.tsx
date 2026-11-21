@@ -1,61 +1,79 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import Reveal, { SectionHeader } from "./Reveal";
 
 const skillGroups = [
   {
-    category: "AI",
-    items: "RAG, LangChain, OpenAI and Claude APIs, Hugging Face, QLoRA fine-tuning",
+    category: "AI & LLMs",
+    blurb: "RAG pipelines, LLM apps, fine-tuning",
+    items: [
+      "RAG",
+      "LangChain",
+      "OpenAI API",
+      "Claude API",
+      "Hugging Face",
+      "QLoRA fine-tuning",
+    ],
+    key: ["RAG", "LangChain"],
   },
   {
     category: "Backend",
-    items: "Python, FastAPI, TypeScript, Node.js, REST APIs, AWS",
+    blurb: "APIs and server-side logic",
+    items: ["Python", "FastAPI", "TypeScript", "Node.js", "REST APIs", "AWS"],
+    key: ["Python", "FastAPI"],
   },
   {
     category: "Data",
-    items: "PostgreSQL, pgvector, Qdrant, Redis",
+    blurb: "Relational and vector storage",
+    items: ["PostgreSQL", "pgvector", "Qdrant", "Redis"],
+    key: ["PostgreSQL"],
   },
   {
-    category: "Tools",
-    items: "Docker, GitHub Actions, Git, Next.js, React",
+    category: "Web & Tools",
+    blurb: "Front end, CI and shipping",
+    items: ["Next.js", "React", "Docker", "GitHub Actions", "Git"],
+    key: ["Next.js"],
   },
 ];
 
 export default function Skills() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-60px" });
-
   return (
-    <section id="skills" className="section-y relative">
-      <div className="page-container" ref={ref}>
-        <motion.h2
-          initial={{ opacity: 0, y: 10 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.4 }}
-          className="heading mb-6 text-2xl md:mb-8 md:text-3xl"
-        >
-          Skills
-        </motion.h2>
+    <section id="skills" className="section-y">
+      <div className="page-container">
+        <SectionHeader
+          title="Tech Stack"
+          aside={
+            <>
+              The tools behind
+              <br />
+              my work.
+            </>
+          }
+        />
 
-        <motion.dl
-          initial={{ opacity: 0, y: 8 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.35, delay: 0.08 }}
-          className="grid max-w-4xl gap-x-6 gap-y-3 sm:grid-cols-[100px_1fr]"
-        >
-          {skillGroups.map((group) => (
-            <div key={group.category} className="contents">
-              <dt className="label-mono pt-0.5">{group.category}</dt>
-              <dd
-                className="mb-2 text-sm leading-relaxed sm:mb-0 md:text-[15px]"
-                style={{ color: "var(--text)" }}
+        <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
+          {skillGroups.map((group, i) => (
+            <Reveal key={group.category} delay={i * 0.06}>
+              <div
+                className="border-t-2 pt-6"
+                style={{ borderColor: "var(--border-strong)" }}
               >
-                {group.items}
-              </dd>
-            </div>
+                <h3 className="heading text-3xl">{group.category}</h3>
+                <p className="muted mt-2 text-sm">{group.blurb}</p>
+                <ul className="mt-6 flex flex-wrap gap-2">
+                  {group.items.map((item) => (
+                    <li
+                      key={item}
+                      className={`chip ${group.key.includes(item) ? "chip--ink" : ""}`}
+                    >
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </Reveal>
           ))}
-        </motion.dl>
+        </div>
       </div>
     </section>
   );

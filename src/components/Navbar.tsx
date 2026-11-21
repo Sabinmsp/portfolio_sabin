@@ -1,154 +1,126 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Sun, Moon } from "lucide-react";
+import { MoreHorizontal, X, Sun, Moon, ArrowUpRight } from "lucide-react";
 import { useTheme } from "./ThemeProvider";
 
 const navLinks = [
   { name: "About", href: "#about" },
+  { name: "Ask me", href: "#ask" },
   { name: "Skills", href: "#skills" },
   { name: "Projects", href: "#projects" },
-  { name: "Education", href: "#education" },
+  { name: "Journey", href: "#journey" },
   { name: "Contact", href: "#contact" },
 ];
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const { theme, toggle } = useTheme();
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+    if (!isOpen) return;
+    const onDown = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsOpen(false);
+    };
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [isOpen]);
 
   return (
-    <motion.nav
-      initial={{ y: -16, opacity: 0 }}
+    <motion.div
+      ref={ref}
+      initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.35, ease: "easeOut" }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-200 ${
-        scrolled ? "border-b backdrop-blur-md" : ""
-      }`}
-      style={
-        scrolled
-          ? {
-              background: "color-mix(in srgb, var(--bg) 88%, transparent)",
-              borderColor: "var(--border)",
-            }
-          : undefined
-      }
+      transition={{ duration: 0.4, ease: "easeOut" }}
+      className="fixed top-4 left-1/2 z-50 w-[calc(100%-2rem)] max-w-[340px] -translate-x-1/2 md:top-6"
     >
-      <div className="page-container flex items-center justify-between py-3.5 md:py-4">
-        <a href="#about" className="flex items-center gap-2.5 group">
-          <img
-            src={theme === "dark" ? "/logo-dark.png" : "/logo-light.png"}
-            alt="S"
-            className="h-7 w-7 rounded object-contain"
-          />
-          <span
-            className="font-display text-[15px] font-semibold tracking-tight"
-            style={{ color: "var(--text-heading)" }}
-          >
-            Sabin
-          </span>
+      <nav
+        aria-label="Main"
+        className="nav-pill flex items-center justify-between py-2 pr-2 pl-4"
+      >
+        <a
+          href="#about"
+          className="font-display text-lg font-bold tracking-tight"
+        >
+          Sabin
         </a>
 
-        <div className="hidden items-center gap-7 md:flex">
-          {navLinks.map((link) => (
-            <a
-              key={link.name}
-              href={link.href}
-              className="text-[13px] transition-colors hover:text-[var(--text-heading)]"
-              style={{ color: "var(--text-muted)" }}
-            >
-              {link.name}
-            </a>
-          ))}
-
+        <div className="flex items-center gap-1.5">
           <button
             onClick={toggle}
-            className="p-1.5 transition-colors hover:text-accent"
-            style={{
-              color: "var(--text-muted)",
-              border: "1px solid var(--border)",
-              borderRadius: 3,
-            }}
-            aria-label="Toggle theme"
+            className="grid h-9 w-9 place-items-center rounded-lg opacity-80 transition-opacity hover:opacity-100"
+            aria-label={
+              theme === "dark" ? "Switch to light theme" : "Switch to dark theme"
+            }
           >
             {theme === "dark" ? (
-              <Sun className="h-3.5 w-3.5" />
+              <Sun className="h-4 w-4" />
             ) : (
-              <Moon className="h-3.5 w-3.5" />
-            )}
-          </button>
-
-          <a
-            href="#contact"
-            className="bg-accent px-3.5 py-1.5 text-[13px] font-medium text-white transition-colors hover:bg-accent-hover"
-            style={{ borderRadius: 3 }}
-          >
-            Hire me
-          </a>
-        </div>
-
-        <div className="flex items-center gap-2 md:hidden">
-          <button
-            onClick={toggle}
-            className="p-1.5"
-            style={{
-              color: "var(--text-muted)",
-              border: "1px solid var(--border)",
-              borderRadius: 3,
-            }}
-            aria-label="Toggle theme"
-          >
-            {theme === "dark" ? (
-              <Sun className="h-3.5 w-3.5" />
-            ) : (
-              <Moon className="h-3.5 w-3.5" />
+              <Moon className="h-4 w-4" />
             )}
           </button>
           <button
-            onClick={() => setIsOpen(!isOpen)}
-            style={{ color: "var(--text-muted)" }}
-            aria-label="Menu"
+            onClick={() => setIsOpen((o) => !o)}
+            className="nav-pill__menu-btn"
+            aria-label={isOpen ? "Close menu" : "Open menu"}
+            aria-expanded={isOpen}
           >
-            {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            {isOpen ? (
+              <X className="h-4 w-4" />
+            ) : (
+              <MoreHorizontal className="h-5 w-5" />
+            )}
           </button>
         </div>
-      </div>
+      </nav>
 
       <AnimatePresence>
         {isOpen ? (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="overflow-hidden border-b md:hidden"
-            style={{
-              background: "var(--bg-card)",
-              borderColor: "var(--border)",
-            }}
+            initial={{ opacity: 0, y: -8, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -8, scale: 0.98 }}
+            transition={{ duration: 0.18 }}
+            className="nav-pill mt-2 p-2"
           >
-            <div className="page-container flex flex-col gap-1 py-3">
+            <ul className="grid">
               {navLinks.map((link) => (
-                <a
-                  key={link.name}
-                  href={link.href}
-                  onClick={() => setIsOpen(false)}
-                  className="px-1 py-2 text-sm"
-                  style={{ color: "var(--text)" }}
-                >
-                  {link.name}
-                </a>
+                <li key={link.name}>
+                  <a
+                    href={link.href}
+                    onClick={() => setIsOpen(false)}
+                    className="font-display block rounded-lg px-3 py-2.5 text-lg font-semibold transition-opacity hover:opacity-70"
+                  >
+                    {link.name}
+                  </a>
+                </li>
               ))}
-            </div>
+            </ul>
+            <a
+              href="/Sabin_Pradhan-Resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setIsOpen(false)}
+              className="font-display mt-1 flex items-center justify-between rounded-lg px-3 py-2.5 text-sm font-semibold"
+              style={{ background: "var(--on-ink)", color: "var(--ink)" }}
+            >
+              Resume
+              <ArrowUpRight className="h-4 w-4" />
+            </a>
           </motion.div>
         ) : null}
       </AnimatePresence>
-    </motion.nav>
+    </motion.div>
   );
 }
