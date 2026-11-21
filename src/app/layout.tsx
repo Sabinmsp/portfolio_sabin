@@ -24,7 +24,13 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "Sabin Pradhan | AI Engineer & Full-Stack Developer",
   description:
-    "Sabin Pradhan, AI Engineer. RAG systems, LLM applications and backend APIs with Python and FastAPI.",
+    "Sabin Pradhan, AI Engineer and Full-Stack Developer in Darwin, NT. Explore interactive architectures of SignBridge, CareerOS, the Postie Coffee ordering system and more.",
+  openGraph: {
+    title: "Sabin Pradhan | AI Engineer & Full-Stack Developer",
+    description:
+      "An interactive AI engineering portfolio: explore how each system actually works.",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
@@ -35,7 +41,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      data-theme="light"
+      data-theme="dark"
       className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`}
       suppressHydrationWarning
     >
@@ -47,7 +53,7 @@ export default function RootLayout({
         {/* Prevent flash of wrong theme before hydration */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark"){document.documentElement.setAttribute("data-theme",t);}else{document.documentElement.setAttribute("data-theme","light");}}catch(e){}})();`,
+            __html: `(function(){try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark"){document.documentElement.setAttribute("data-theme",t);}else{document.documentElement.setAttribute("data-theme","dark");}}catch(e){}})();`,
           }}
         />
       </head>

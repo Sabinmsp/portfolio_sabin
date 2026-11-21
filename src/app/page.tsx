@@ -1,28 +1,33 @@
-import Curtain from "@/components/Curtain";
-import Marquee from "@/components/Marquee";
-import { Cursor, ScrollProgress, SmoothScroll } from "@/components/Interactive";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
-import AskMe from "@/components/AskMe";
-import Skills from "@/components/Skills";
-import Experience from "@/components/Experience";
+import Systems from "@/components/Systems";
+import Lab from "@/components/Lab";
+import Assistant from "@/components/Assistant";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
+import CommandPalette from "@/components/CommandPalette";
+import { Cursor, ScrollProgress, SmoothScroll } from "@/components/Interactive";
 
 export default function Home() {
   return (
     <>
+      <a
+        href="#projects"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:rounded-full focus:px-4 focus:py-2"
+        style={{ background: "var(--accent)", color: "var(--on-accent)" }}
+      >
+        Skip to projects
+      </a>
       <SmoothScroll />
       <ScrollProgress />
       <Cursor />
-      <Curtain />
+      <CommandPalette />
       <Navbar />
       <main>
         <Hero />
-        <Marquee />
-        <AskMe />
-        <Skills />
-        <Experience />
+        <Systems />
+        <Lab />
+        <Assistant />
         <Contact />
       </main>
       <Footer />

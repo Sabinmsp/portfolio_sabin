@@ -1,17 +1,15 @@
 import { ArrowUp, ArrowUpRight } from "lucide-react";
 
 const explore = [
-  { name: "About", href: "#about" },
-  { name: "Ask me", href: "#ask" },
-  { name: "Skills", href: "#skills" },
-  { name: "Projects", href: "#projects" },
-  { name: "Journey", href: "#journey" },
+  { name: "Systems", href: "#projects" },
+  { name: "Lab", href: "#lab" },
+  { name: "Ask", href: "#ask" },
   { name: "Contact", href: "#contact" },
 ];
 
 export default function Footer() {
   return (
-    <footer style={{ background: "var(--ink)", color: "var(--on-ink)" }}>
+    <footer className="border-t" style={{ borderColor: "var(--border)", background: "var(--bg-elev)", color: "var(--ink)" }}>
       <div className="page-container grid gap-10 pt-16 pb-10 md:grid-cols-3 md:pt-20">
         <div>
           <p className="font-display text-3xl font-bold tracking-tight">
