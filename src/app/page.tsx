@@ -1,3 +1,4 @@
+import Curtain from "@/components/Curtain";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import AskMe from "@/components/AskMe";
@@ -9,6 +10,7 @@ import Footer from "@/components/Footer";
 export default function Home() {
   return (
     <>
+      <Curtain />
       <Navbar />
       <main>
         <Hero />

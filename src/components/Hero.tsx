@@ -8,7 +8,6 @@ import {
   useTransform,
 } from "framer-motion";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
-import IntroCode from "./IntroCode";
 
 const PROOF = [
   { value: "2", label: "client projects shipped" },
@@ -19,6 +18,9 @@ const PROOF = [
 const TYPED = ["RAG SYSTEMS", "LLM APPS", "FULL-STACK BUILDS", "CLIENT WORK"];
 
 const EASE = [0.22, 1, 0.36, 1] as const;
+
+/** Intro animations start once the opening curtain (Curtain.tsx) lifts. */
+const D = 0.9;
 
 const rise = (delay: number) => ({
   initial: { opacity: 0, y: 24 },
@@ -164,31 +166,49 @@ export default function Hero() {
         aria-label="Introduction"
         className="relative flex h-[100svh] min-h-[600px] flex-col justify-between overflow-hidden pt-28 pb-8 md:pt-32 md:pb-10"
       >
-        <IntroCode />
         <motion.div
           style={reduce ? undefined : { opacity: introFade, y: introLift }}
-          className="page-container max-lg:flex max-lg:flex-1 max-lg:items-center max-lg:justify-center"
+          className="page-container max-lg:flex max-lg:flex-1 max-lg:flex-col max-lg:items-center max-lg:justify-center"
         >
           <h1 className="intro-title text-center">
-            <MaskLine delay={0.15}>
+            <MaskLine delay={D + 0.05}>
               <span className="intro-bracket">&lt;</span> GROUNDED
             </MaskLine>
-            <MaskLine delay={0.3}>
+            <MaskLine delay={D + 0.18}>
               AI ENGINEER <span className="intro-bracket">/&gt;</span>
             </MaskLine>
             <span className="sr-only">Sabin Pradhan</span>
           </h1>
+          <motion.span
+            aria-hidden
+            className="mx-auto mt-6 block h-px w-full max-w-3xl origin-center md:mt-8"
+            style={{ background: "var(--ink)" }}
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ duration: 1.2, delay: D + 0.55, ease: EASE }}
+          />
+          <motion.p
+            {...rise(D + 0.75)}
+            className="muted mt-5 text-center text-sm tracking-wide uppercase md:text-base"
+          >
+            Sabin Pradhan · Darwin, NT
+          </motion.p>
         </motion.div>
 
         <div className="page-container flex items-end justify-between gap-4">
+          <motion.div {...rise(D + 0.85)}>
+            <p className="display text-4xl md:text-6xl">&copy;{year}</p>
+            <a
+              href="#about"
+              className="label-mono mt-3 inline-flex items-center gap-3"
+              aria-label="Scroll to about"
+            >
+              <span className="scroll-cue" aria-hidden />
+              Scroll
+            </a>
+          </motion.div>
           <motion.p
-            {...rise(0.7)}
-            className="display text-4xl md:text-6xl"
-          >
-            &copy;{year}
-          </motion.p>
-          <motion.p
-            {...rise(0.85)}
+            {...rise(D + 0.95)}
             className="font-display text-right text-lg font-semibold tracking-tight md:text-2xl"
             style={{ color: "var(--ink)" }}
           >
@@ -320,7 +340,7 @@ export default function Hero() {
           <motion.div
             initial={{ opacity: 0, y: 60, scale: 0.92 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 1.1, delay: 0.45, ease: EASE }}
+            transition={{ duration: 1.1, delay: D + 0.4, ease: EASE }}
             className="portrait pointer-events-auto h-full w-full"
           >
             <img src="/sabin.png" alt="Sabin Pradhan" width={566} height={588} />
