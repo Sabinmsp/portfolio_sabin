@@ -2,12 +2,15 @@
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
+  AnimatePresence,
   motion,
+  type MotionValue,
   useReducedMotion,
   useScroll,
   useTransform,
 } from "framer-motion";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { HoverLetters, Magnetic } from "./Interactive";
 
 const PROOF = [
   { value: "2", label: "client projects shipped" },
@@ -15,7 +18,7 @@ const PROOF = [
   { value: "14B", label: "model fine-tuned on one GPU" },
 ];
 
-const TYPED = ["RAG SYSTEMS", "LLM APPS", "FULL-STACK BUILDS", "CLIENT WORK"];
+const FOCUS = ["RAG systems", "LLM apps", "client products", "grounded answers"];
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -31,34 +34,89 @@ const rise = (delay: number) => ({
 const useIsoLayoutEffect =
   typeof window === "undefined" ? useEffect : useLayoutEffect;
 
-/** Types a phrase, holds, deletes it, then moves to the next one. */
-function TypeLoop({ words }: { words: string[] }) {
+/** Swaps through words with a vertical slide, like a split-flap sign. */
+function RotatingWord({ words }: { words: string[] }) {
   const reduce = useReducedMotion();
   const [i, setI] = useState(0);
-  const [n, setN] = useState(0);
-  const [deleting, setDeleting] = useState(false);
-  const word = words[i];
-
   useEffect(() => {
     if (reduce) return;
-    let ms = deleting ? 40 : 85;
-    if (!deleting && n === word.length) ms = 1800;
-    if (deleting && n === 0) ms = 300;
-    const id = window.setTimeout(() => {
-      if (!deleting && n === word.length) setDeleting(true);
-      else if (deleting && n === 0) {
-        setDeleting(false);
-        setI((x) => (x + 1) % words.length);
-      } else setN((x) => x + (deleting ? -1 : 1));
-    }, ms);
-    return () => window.clearTimeout(id);
-  }, [n, deleting, word.length, words.length, reduce]);
+    const id = window.setInterval(() => setI((x) => (x + 1) % words.length), 2400);
+    return () => window.clearInterval(id);
+  }, [reduce, words.length]);
 
   return (
-    <span aria-label={words.join(", ")}>
-      <span aria-hidden>{reduce ? word : word.slice(0, n)}</span>
-      <span className="type-caret" aria-hidden />
+    <span className="relative inline-grid overflow-hidden align-bottom">
+      <AnimatePresence mode="popLayout" initial={false}>
+        <motion.span
+          key={words[i]}
+          className="col-start-1 row-start-1 whitespace-nowrap"
+          initial={{ y: "100%", opacity: 0 }}
+          animate={{ y: "0%", opacity: 1 }}
+          exit={{ y: "-100%", opacity: 0 }}
+          transition={{ duration: 0.55, ease: EASE }}
+        >
+          {words[i]}
+        </motion.span>
+      </AnimatePresence>
     </span>
+  );
+}
+
+/** Words fade from faint to solid as the paragraph scrolls into place. */
+function ScrubText({ text, bold }: { text: string; bold: string[] }) {
+  const ref = useRef<HTMLParagraphElement>(null);
+  const reduce = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start 0.95", "start 0.45"],
+  });
+  const words = text.split(" ");
+  return (
+    <p
+      ref={ref}
+      className="font-display text-2xl leading-snug md:text-[1.75rem]"
+      style={{ color: "var(--ink)" }}
+    >
+      {words.map((w, i) => {
+        const start = i / words.length;
+        const end = start + 1 / words.length;
+        return (
+          <ScrubWord
+            key={i}
+            progress={scrollYProgress}
+            range={[start, end]}
+            strong={bold.includes(w.replace(/[.,]/g, ""))}
+            still={!!reduce}
+          >
+            {w}
+          </ScrubWord>
+        );
+      })}
+    </p>
+  );
+}
+
+function ScrubWord({
+  children,
+  progress,
+  range,
+  strong,
+  still,
+}: {
+  children: string;
+  progress: MotionValue<number>;
+  range: [number, number];
+  strong: boolean;
+  still: boolean;
+}) {
+  const opacity = useTransform(progress, range, [0.18, 1]);
+  return (
+    <motion.span
+      style={still ? undefined : { opacity }}
+      className={strong ? "font-semibold" : undefined}
+    >
+      {children}{" "}
+    </motion.span>
   );
 }
 
@@ -71,10 +129,10 @@ function MaskLine({
   delay: number;
 }) {
   return (
-    <span className="block overflow-hidden pb-[0.06em]">
+    <span className="-mt-[0.16em] block overflow-hidden pt-[0.16em] pb-[0.06em]">
       <motion.span
         className="block"
-        initial={{ y: "110%" }}
+        initial={{ y: "130%" }}
         animate={{ y: "0%" }}
         transition={{ duration: 1, delay, ease: EASE }}
       >
@@ -172,10 +230,10 @@ export default function Hero() {
         >
           <h1 className="intro-title text-center">
             <MaskLine delay={D + 0.05}>
-              <span className="intro-bracket">&lt;</span> GROUNDED
+              <HoverLetters text="BUILDING AI" />
             </MaskLine>
             <MaskLine delay={D + 0.18}>
-              AI ENGINEER <span className="intro-bracket">/&gt;</span>
+              <HoverLetters text="THAT SHIPS." />
             </MaskLine>
             <span className="sr-only">Sabin Pradhan</span>
           </h1>
@@ -191,7 +249,7 @@ export default function Hero() {
             {...rise(D + 0.75)}
             className="muted mt-5 text-center text-sm tracking-wide uppercase md:text-base"
           >
-            Sabin Pradhan · Darwin, NT
+            Sabin Pradhan · AI Engineer · Darwin, NT
           </motion.p>
         </motion.div>
 
@@ -207,15 +265,18 @@ export default function Hero() {
               Scroll
             </a>
           </motion.div>
-          <motion.p
+          <motion.div
             {...rise(D + 0.95)}
-            className="font-display text-right text-lg font-semibold tracking-tight md:text-2xl"
-            style={{ color: "var(--ink)" }}
+            className="text-right"
           >
-            {"{{ /"}
-            <TypeLoop words={TYPED} />
-            {" }}"}
-          </motion.p>
+            <p className="label-mono">Currently focused on</p>
+            <p
+              className="font-display mt-1 text-xl font-semibold tracking-tight md:text-3xl"
+              style={{ color: "var(--ink)" }}
+            >
+              <RotatingWord words={FOCUS} />
+            </p>
+          </motion.div>
         </div>
       </section>
 
@@ -277,21 +338,19 @@ export default function Hero() {
           </div>
 
           <Reveal delay={0.12} className="order-3">
-            <p className="font-display text-2xl leading-snug md:text-[1.75rem]">
-              I build <strong className="font-semibold">RAG systems</strong>{" "}
-              and <strong className="font-semibold">LLM apps</strong> that
-              check their facts, and ship{" "}
-              <strong className="font-semibold">
-                real products for clients
-              </strong>
-              .
-            </p>
+            <ScrubText
+              text="I build RAG systems and LLM apps that check their facts, and ship real products for clients."
+              bold={["RAG", "systems", "LLM", "apps", "real", "products", "for", "clients"]}
+            />
 
             <div className="mt-7 flex flex-wrap gap-3">
-              <a href="#projects" className="btn-ink">
-                Explore projects
-                <ArrowRight className="h-4 w-4" />
-              </a>
+              <Magnetic>
+                <a href="#projects" className="btn-ink">
+                  Explore projects
+                  <ArrowRight className="h-4 w-4" />
+                </a>
+              </Magnetic>
+<Magnetic>
               <a
                 href="/Sabin_Pradhan-Resume.pdf"
                 target="_blank"
@@ -301,6 +360,7 @@ export default function Hero() {
                 Resume
                 <ArrowUpRight className="h-4 w-4" />
               </a>
+              </Magnetic>
             </div>
 
             <dl className="mt-9 grid grid-cols-3 gap-4">

@@ -1,5 +1,7 @@
 "use client";
 
+import { useRef } from "react";
+import { motion, useReducedMotion, useSpring } from "framer-motion";
 import { ArrowUpRight, ExternalLink, Github } from "lucide-react";
 import Reveal from "./Reveal";
 
@@ -20,12 +22,38 @@ export default function ProjectCard({
   index: number;
 }) {
   const primary = item.link ?? item.github;
+  const ref = useRef<HTMLElement>(null);
+  const reduce = useReducedMotion();
+  const rx = useSpring(0, { stiffness: 200, damping: 20 });
+  const ry = useSpring(0, { stiffness: 200, damping: 20 });
+
+  // Tilt toward the mouse and move the spotlight with it.
+  const onMove = (e: React.PointerEvent<HTMLElement>) => {
+    const el = ref.current;
+    if (!el || e.pointerType !== "mouse") return;
+    const r = el.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width;
+    const py = (e.clientY - r.top) / r.height;
+    el.style.setProperty("--mx", `${px * 100}%`);
+    el.style.setProperty("--my", `${py * 100}%`);
+    if (reduce) return;
+    ry.set((px - 0.5) * 7);
+    rx.set((0.5 - py) * 7);
+  };
+  const onLeave = () => {
+    rx.set(0);
+    ry.set(0);
+  };
 
   return (
     <Reveal delay={(index % 2) * 0.08} className="h-full">
-      <article
+      <motion.article
+        ref={ref}
         aria-label={`Project: ${item.title}`}
         className="project-card h-full"
+        onPointerMove={onMove}
+        onPointerLeave={onLeave}
+        style={{ rotateX: rx, rotateY: ry, transformPerspective: 900 }}
       >
         <div className="flex min-h-[2.1rem] items-start justify-between gap-4">
           <span className="label-mono">
@@ -90,7 +118,7 @@ export default function ProjectCard({
             ) : null}
           </div>
         ) : null}
-      </article>
+      </motion.article>
     </Reveal>
   );
 }

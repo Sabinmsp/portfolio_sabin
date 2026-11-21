@@ -96,10 +96,7 @@ export default function AskMe() {
             </div>
 
             <div className="flex flex-col p-5 md:p-9" aria-live="polite">
-              <p className="label-mono">
-                <span style={{ color: "var(--ink)" }}>&gt;</span>{" "}
-                {QA[active].q}
-              </p>
+              <p className="label-mono">{QA[active].q}</p>
               <p className="heading mt-4 min-h-[9rem] text-xl font-medium md:min-h-[8rem] md:text-[1.7rem] md:leading-snug">
                 {reduceMotion ? answer : answer.slice(0, typed)}
                 {done ? null : <span className="ask-caret" aria-hidden />}
@@ -109,7 +106,7 @@ export default function AskMe() {
                   className="tag tag--soft transition-opacity duration-300"
                   style={{ opacity: done ? 1 : 0 }}
                 >
-                  source: {QA[active].source}
+                  Source: {QA[active].source}
                 </span>
                 <span className="label-mono">
                   Answers come only from this site, which is how I build AI too.

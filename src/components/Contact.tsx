@@ -12,6 +12,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import Reveal from "./Reveal";
+import { Magnetic } from "./Interactive";
 
 const EMAIL = "sabinmsp@gmail.com";
 
@@ -309,6 +310,7 @@ export default function Contact() {
               </p>
             ) : null}
 
+            <Magnetic strength={0.2}>
             <button
               type="submit"
               disabled={status === "sending"}
@@ -336,6 +338,7 @@ export default function Contact() {
                 </>
               )}
             </button>
+            </Magnetic>
           </form>
         </Reveal>
       </div>

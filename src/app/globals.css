@@ -109,10 +109,13 @@ body::before {
   line-height: 1.12;
 }
 
+/* Small uppercase labels (sans, not monospace) */
 .label-mono {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.02em;
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   color: var(--text-muted);
 }
 
@@ -193,8 +196,7 @@ body::before {
   background: transparent;
   border: 1px solid var(--border);
   color: var(--text-muted);
-  font-family: var(--font-mono);
-  font-weight: 400;
+  font-weight: 500;
 }
 
 .icon-box {
@@ -214,28 +216,12 @@ body::before {
   font-weight: 700;
   color: var(--ink);
   text-transform: uppercase;
-  letter-spacing: -0.055em;
+  letter-spacing: -0.03em;
   line-height: 0.86;
   font-size: clamp(3.1rem, 12.5vw, 11rem);
 }
 
-.intro-bracket {
-  font-weight: 400;
-  letter-spacing: -0.02em;
-  opacity: 0.9;
-  font-size: 0.7em;
-  vertical-align: 0.12em;
-}
 
-.type-caret {
-  display: inline-block;
-  width: 2px;
-  height: 0.95em;
-  margin-inline: 3px 1px;
-  vertical-align: -0.08em;
-  background: var(--ink);
-  animation: ask-blink 1s steps(1) infinite;
-}
 
 /* Small "scroll" cue: a line with a dot that travels along it */
 .scroll-cue {
@@ -266,6 +252,91 @@ body::before {
   100% {
     transform: translateX(100%);
   }
+}
+
+/* Cursor ring (fine pointers only, see Interactive.tsx) */
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 90;
+  width: 22px;
+  height: 22px;
+  margin: -11px 0 0 -11px;
+  border-radius: 9999px;
+  border: 1.5px solid #fff;
+  mix-blend-mode: difference;
+  pointer-events: none;
+}
+
+/* Skills marquee */
+.marquee {
+  display: flex;
+  overflow: hidden;
+  border-block: 1px solid var(--border);
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+}
+
+.marquee__track {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 2.5rem;
+  padding: 1.4rem 1.25rem;
+  animation: marquee 38s linear infinite;
+}
+
+.marquee:hover .marquee__track {
+  animation-play-state: paused;
+}
+
+.marquee__item {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.4rem, 3vw, 2.4rem);
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  white-space: nowrap;
+  transition: color 0.2s ease;
+}
+
+.marquee__item:hover {
+  color: var(--accent);
+}
+
+.marquee__sep {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 9999px;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+/* Spotlight that follows the mouse inside project cards */
+.project-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  background: radial-gradient(
+    380px circle at var(--mx, 50%) var(--my, 50%),
+    color-mix(in srgb, var(--ink) 7%, transparent),
+    transparent 70%
+  );
+}
+
+.project-card:hover::before {
+  opacity: 1;
 }
 
 /* Opening curtain */
@@ -326,7 +397,7 @@ body::before {
   border: 1px solid var(--border);
   border-radius: 14px;
   padding: 1.5rem;
-  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
 @media (min-width: 768px) {
@@ -336,7 +407,6 @@ body::before {
 }
 
 .project-card:hover {
-  transform: translateY(-4px);
   border-color: var(--text-faint);
   box-shadow: 0 24px 50px -30px rgb(0 0 0 / 0.35);
 }
@@ -468,8 +538,22 @@ body::before {
     scroll-behavior: auto;
   }
   .ask-caret,
-  .type-caret,
-  .scroll-cue::after {
+  .scroll-cue::after,
+  .marquee__track {
     animation: none;
   }
+}
+
+/* Smooth scrolling (Lenis) */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
 }
