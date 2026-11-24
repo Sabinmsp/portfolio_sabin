@@ -63,7 +63,7 @@ function Diagram({
             <motion.path
               key={`${e.from}-${e.to}`}
               d={edgePath(byId[e.from], byId[e.to])}
-              className={`sys-edge ${hot ? "sys-edge--hot sys-edge--flow" : "sys-edge--flow"}`}
+              className={`sys-edge ${hot ? "sys-edge--hot sys-edge--flow" : ""}`}
               initial={{ opacity: 0 }}
               animate={{ opacity: hot ? 1 : 0.55 }}
               transition={{ duration: 0.8, ease: EASE }}
@@ -231,12 +231,12 @@ export default function Systems() {
         <SectionHeader
           title={
             <>
-              Systems I&rsquo;ve <span className="accent">built.</span>
+              Selected systems
             </>
           }
           aside={
             <>
-              Pick a system, then click any node to see what it does and why.
+              Pick a system and click any step to see what it does and why.
             </>
           }
         />
@@ -286,7 +286,7 @@ export default function Systems() {
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
                     <span className={toneClass(system)}>{system.status}</span>
-                    <h3 className="heading mt-3 text-3xl md:text-4xl">{system.name}</h3>
+                    <h3 className="heading mt-3 text-2xl md:text-3xl">{system.name}</h3>
                     <p className="muted mt-1 max-w-xl">{system.tagline}</p>
                   </div>
                   <div className="flex flex-wrap items-center gap-2">
@@ -366,14 +366,14 @@ export default function Systems() {
                         <div key={f.label}>
                           <dt className="sr-only">{f.label}</dt>
                           <dd>
-                            <span className="display block text-2xl md:text-3xl">{f.value}</span>
+                            <span className="heading block text-xl">{f.value}</span>
                             <span className="muted mt-1 block text-xs leading-snug">{f.label}</span>
                           </dd>
                         </div>
                       ))}
                     </dl>
                     {system.note ? (
-                      <p className="muted mt-5 border-l-2 pl-3 text-sm" style={{ borderColor: "var(--accent-line)" }}>
+                      <p className="muted mt-5 border-l pl-3 text-sm" style={{ borderColor: "var(--border-strong)" }}>
                         {system.note}
                       </p>
                     ) : null}
@@ -383,7 +383,7 @@ export default function Systems() {
                         askAssistant(`Tell me about ${system.name}`);
                         document.getElementById("ask")?.scrollIntoView({ behavior: "smooth" });
                       }}
-                      className="accent mt-5 inline-flex items-center gap-2 text-sm font-semibold hover:underline"
+                      className="muted mt-5 inline-flex items-center gap-2 text-sm hover:text-[var(--ink)]"
                     >
                       <MessageCircle className="h-4 w-4" />
                       Ask the assistant about {system.name}

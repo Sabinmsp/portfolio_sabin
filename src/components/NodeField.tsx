@@ -7,6 +7,7 @@ type Pulse = { a: number; b: number; t: number };
 
 const LINK = 128;
 const POINTER = 170;
+const SIGNALS = false;
 
 /**
  * A slowly drifting network of nodes. Nearby nodes link up, the pointer
@@ -43,14 +44,14 @@ export default function NodeField({ className }: { className?: string }) {
     };
 
     const seed = () => {
-      const n = Math.round(Math.min(120, Math.max(36, (w * h) / 13000)));
+      const n = Math.round(Math.min(70, Math.max(24, (w * h) / 22000)));
       pts = Array.from({ length: n }, () => ({
         x: Math.random() * w,
         y: Math.random() * h,
         vx: (Math.random() - 0.5) * 0.22,
         vy: (Math.random() - 0.5) * 0.22,
         r: Math.random() * 1.2 + 0.8,
-        hub: Math.random() < 0.07,
+        hub: false,
       }));
       pulses = [];
     };
@@ -117,8 +118,8 @@ export default function NodeField({ className }: { className?: string }) {
               Math.hypot((a.x + b.x) / 2 - pointer.x, (a.y + b.y) / 2 - pointer.y) <
                 POINTER;
             ctx.strokeStyle = near
-              ? alpha(colors.accent, (1 - d / LINK) * 0.55)
-              : alpha(colors.line, (1 - d / LINK) * 0.7);
+              ? alpha(colors.accent, (1 - d / LINK) * 0.3)
+              : alpha(colors.line, (1 - d / LINK) * 0.5);
             ctx.lineWidth = near ? 1 : 0.7;
             ctx.beginPath();
             ctx.moveTo(a.x, a.y);
@@ -132,7 +133,7 @@ export default function NodeField({ className }: { className?: string }) {
         for (const p of pts) {
           const d = Math.hypot(p.x - pointer.x, p.y - pointer.y);
           if (d < POINTER * 0.8) {
-            ctx.strokeStyle = alpha(colors.accent, (1 - d / (POINTER * 0.8)) * 0.35);
+            ctx.strokeStyle = alpha(colors.accent, (1 - d / (POINTER * 0.8)) * 0.18);
             ctx.lineWidth = 0.8;
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
@@ -156,7 +157,8 @@ export default function NodeField({ className }: { className?: string }) {
         }
       }
 
-      if (reduce) return;
+      // Minimal: no travelling signals.
+      if (reduce || !SIGNALS) return;
 
       // Signals travelling along links.
       if (t - lastPulse > 320 && links.length) {

@@ -161,7 +161,7 @@ export default function Contact() {
     <section id="contact" className="section-y">
       <div className="page-container grid gap-14 lg:grid-cols-[1fr_1.2fr] lg:gap-20">
         <Reveal>
-          <h2 className="display text-6xl sm:text-7xl md:text-8xl">
+          <h2 className="heading text-3xl md:text-5xl">
             Let&rsquo;s talk.
           </h2>
           <p className="muted mt-7 max-w-md text-lg leading-relaxed">

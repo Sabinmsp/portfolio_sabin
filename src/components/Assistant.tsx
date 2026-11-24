@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ArrowUp, ShieldCheck, Sparkles } from "lucide-react";
+import { ArrowUp } from "lucide-react";
 import { SectionHeader } from "./Reveal";
 import { FALLBACK, retrieve, SUGGESTED, type Source } from "@/data/knowledge";
 import { openSystem } from "@/data/systems";
@@ -129,18 +129,15 @@ export default function Assistant() {
         <SectionHeader
           title={
             <>
-              Ask my <span className="accent">guide.</span>
+              Ask my guide
             </>
           }
-          aside={<>A recruiter-facing assistant that only answers from verified notes.</>}
+          aside={<>Questions about my work, answered only from verified notes. It runs in your browser and sends nothing anywhere.</>}
         />
 
         <div className="panel grid lg:grid-cols-[1fr_20rem]">
           <div className="flex min-h-[30rem] flex-col">
             <div className="flex items-center gap-3 border-b px-5 py-4" style={{ borderColor: "var(--border)" }}>
-              <span className="grid h-9 w-9 place-items-center rounded-full" style={{ background: "var(--accent)", color: "var(--on-accent)" }}>
-                <Sparkles className="h-4 w-4" />
-              </span>
               <div>
                 <p className="heading text-[15px]">Sabin&rsquo;s guide</p>
                 <p className="muted inline-flex items-center gap-1.5 text-xs">
@@ -223,16 +220,7 @@ export default function Assistant() {
                 </button>
               ))}
             </div>
-            <div className="mt-6 rounded-xl border p-4 text-sm" style={{ borderColor: "var(--border)", background: "var(--bg-elev)" }}>
-              <p className="heading inline-flex items-center gap-2 text-sm">
-                <ShieldCheck className="accent h-4 w-4" /> How it works
-              </p>
-              <p className="muted mt-2 leading-relaxed">
-                Your question is matched against short, verified notes about
-                Sabin&rsquo;s work, right here in your browser. Nothing is sent
-                anywhere, and it never makes up an answer.
-              </p>
-            </div>
+
           </aside>
         </div>
       </div>

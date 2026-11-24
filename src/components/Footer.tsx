@@ -12,7 +12,7 @@ export default function Footer() {
     <footer className="border-t" style={{ borderColor: "var(--border)", background: "var(--bg-elev)", color: "var(--ink)" }}>
       <div className="page-container grid gap-10 pt-16 pb-10 md:grid-cols-3 md:pt-20">
         <div>
-          <p className="font-display text-3xl font-bold tracking-tight">
+          <p className="font-display text-xl font-semibold tracking-tight">
             Sabin.
           </p>
           <p className="mt-3 text-sm opacity-70">
@@ -72,7 +72,7 @@ export default function Footer() {
       </div>
 
       <div className="page-container flex flex-wrap items-end justify-between gap-4 pb-12">
-        <p className="font-display text-4xl font-semibold tracking-tight md:text-6xl">
+        <p className="muted text-sm">
           Thanks for scrolling.
         </p>
         <a

@@ -62,18 +62,6 @@ body {
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* The lab's graph-paper grid, very faint, behind everything */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background-image:
-    linear-gradient(var(--grid-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-  background-size: 64px 64px;
-}
 
 ::selection {
   background: var(--accent);
@@ -106,7 +94,7 @@ body::before {
 
 @media (min-width: 768px) {
   .section-y {
-    padding-block: 8rem;
+    padding-block: 7rem;
   }
 }
 
@@ -171,12 +159,11 @@ body::before {
   font-size: 0.95rem;
   padding: 0.85rem 1.3rem;
   border-radius: 999px;
-  box-shadow: 0 0 0 0 var(--accent-soft);
-  transition: box-shadow 0.25s ease, transform 0.15s ease;
+  transition: opacity 0.15s ease;
 }
 
 .btn-ink:hover {
-  box-shadow: 0 0 0 6px var(--accent-soft), 0 10px 40px -10px var(--accent-line);
+  opacity: 0.88;
 }
 
 .btn-line {
@@ -221,14 +208,17 @@ body::before {
   letter-spacing: 0.02em;
   padding: 0.25rem 0.6rem;
   border-radius: 999px;
-  border: 1px solid var(--border-strong);
-  color: var(--text);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
 }
 
 .tag--live {
-  border-color: var(--accent-line);
-  color: var(--accent);
-  background: var(--accent-soft);
+  color: var(--ink);
+}
+
+.tag--live::before {
+  background: var(--accent);
+  opacity: 1;
 }
 
 .tag::before {
@@ -260,9 +250,9 @@ body::before {
 /* ——— Panels ——— */
 .panel {
   position: relative;
-  background: var(--bg-card);
+  background: transparent;
   border: 1px solid var(--border);
-  border-radius: 20px;
+  border-radius: 14px;
   overflow: hidden;
 }
 
@@ -298,7 +288,7 @@ body::before {
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(ellipse 60% 55% at 30% 45%, color-mix(in srgb, var(--bg) 75%, transparent), transparent 70%),
+    radial-gradient(ellipse 65% 60% at 25% 50%, var(--bg), transparent 75%),
     linear-gradient(to bottom, transparent 70%, var(--bg));
 }
 
@@ -306,9 +296,9 @@ body::before {
   font-family: var(--font-display);
   font-weight: 600;
   color: var(--ink);
-  letter-spacing: -0.045em;
-  line-height: 0.95;
-  font-size: clamp(2.9rem, 7.4vw, 7rem);
+  letter-spacing: -0.035em;
+  line-height: 1.02;
+  font-size: clamp(2.5rem, 5.6vw, 5rem);
 }
 
 /* Small "scroll" cue: a line that fills on a loop */
@@ -362,11 +352,7 @@ body::before {
   width: 100%;
   aspect-ratio: 16 / 8.2;
   border-radius: 16px;
-  background:
-    radial-gradient(ellipse at 50% 50%, var(--accent-soft), transparent 65%),
-    linear-gradient(var(--grid-line) 1px, transparent 1px) 0 0 / 32px 32px,
-    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px) 0 0 / 32px 32px,
-    var(--bg-elev);
+  background: var(--bg-elev);
   border: 1px solid var(--border);
 }
 
@@ -406,8 +392,8 @@ body::before {
   min-width: 8.2rem;
   max-width: 11rem;
   padding: 0.6rem 0.8rem;
-  border-radius: 12px;
-  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  border: 1px solid var(--border);
   background: var(--bg-card);
   text-align: left;
   cursor: pointer;
@@ -420,12 +406,11 @@ body::before {
 
 .sys-node--active {
   border-color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 9%, var(--bg-card));
-  box-shadow: 0 0 0 4px var(--accent-soft), 0 12px 40px -12px var(--accent-line);
+  background: var(--bg-card);
 }
 
 .sys-node--dim {
-  opacity: 0.55;
+  opacity: 0.7;
 }
 
 .sys-node__label {
@@ -761,4 +746,18 @@ html.lenis body {
 .palette input:focus-visible,
 #ask-input:focus-visible {
   outline: none;
+}
+
+/* Quiet text link */
+.link-quiet {
+  color: var(--text);
+  text-decoration: underline;
+  text-decoration-color: var(--border-strong);
+  text-underline-offset: 5px;
+  transition: text-decoration-color 0.15s ease, color 0.15s ease;
+}
+
+.link-quiet:hover {
+  color: var(--ink);
+  text-decoration-color: var(--accent);
 }
