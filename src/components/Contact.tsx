@@ -161,8 +161,11 @@ export default function Contact() {
     <section id="contact" className="section-y">
       <div className="page-container grid gap-14 lg:grid-cols-[1fr_1.2fr] lg:gap-20">
         <Reveal>
-          <h2 className="heading text-3xl md:text-5xl">
-            Let&rsquo;s talk.
+          <p className="label-mono mb-4">(04)</p>
+          <h2 className="mega-title">
+            Let&rsquo;s
+            <br />
+            talk
           </h2>
           <p className="muted mt-7 max-w-md text-lg leading-relaxed">
             Hiring for an AI or full-stack role, or need something built? My
@@ -232,7 +235,7 @@ export default function Contact() {
 
             <div className="grid gap-8 sm:grid-cols-2">
               <div>
-                <label htmlFor="name" className="heading block text-sm">
+                <label htmlFor="name" className="label-mono block">
                   Your name
                 </label>
                 <input
@@ -246,7 +249,7 @@ export default function Contact() {
                 />
               </div>
               <div>
-                <label htmlFor="email" className="heading block text-sm">
+                <label htmlFor="email" className="label-mono block">
                   Email address
                 </label>
                 <input
@@ -262,7 +265,7 @@ export default function Contact() {
             </div>
 
             <div>
-              <label htmlFor="subject" className="heading block text-sm">
+              <label htmlFor="subject" className="label-mono block">
                 Subject
               </label>
               <input
@@ -277,7 +280,7 @@ export default function Contact() {
             </div>
 
             <div>
-              <label htmlFor="message" className="heading block text-sm">
+              <label htmlFor="message" className="label-mono block">
                 What do you have in mind?
               </label>
               <textarea
@@ -314,7 +317,7 @@ export default function Contact() {
             <button
               type="submit"
               disabled={status === "sending"}
-              className="btn-ink disabled:opacity-70"
+              className="pill-gradient gap-2 disabled:opacity-70"
             >
               {status === "sending" ? (
                 <>

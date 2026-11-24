@@ -229,16 +229,9 @@ export default function Systems() {
     <section id="projects" ref={sectionRef} className="section-y">
       <div className="page-container">
         <SectionHeader
-          title={
-            <>
-              Selected systems
-            </>
-          }
-          aside={
-            <>
-              Pick a system and click any step to see what it does and why.
-            </>
-          }
+          index="01"
+          title="Projects"
+          aside="Pick a system and click any step to see what it does and why."
         />
 
         <div className="grid gap-6 lg:grid-cols-[17rem_1fr]">
@@ -262,7 +255,7 @@ export default function Systems() {
                   <span className="muted mr-2 text-xs tabular-nums">
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                  <span className="heading text-[15px] whitespace-nowrap">{s.name}</span>
+                  <span className="sys-tab__name whitespace-nowrap">{s.name}</span>
                 </span>
                 <span
                   aria-hidden

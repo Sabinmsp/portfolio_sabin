@@ -1,5 +1,6 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
+import Marquee from "@/components/Marquee";
 import Systems from "@/components/Systems";
 import Lab from "@/components/Lab";
 import Assistant from "@/components/Assistant";
@@ -24,6 +25,7 @@ export default function Home() {
       <Navbar />
       <main>
         <Hero />
+        <Marquee />
         <Systems />
         <Lab />
         <Assistant />

@@ -1,88 +1,72 @@
+"use client";
+
+import { motion } from "framer-motion";
 import { ArrowUp, ArrowUpRight } from "lucide-react";
+import { LINKS } from "@/data/systems";
 
 const explore = [
-  { name: "Systems", href: "#projects" },
+  { name: "Projects", href: "#projects" },
   { name: "Lab", href: "#lab" },
-  { name: "Ask", href: "#ask" },
+  { name: "Ask me", href: "#ask" },
   { name: "Contact", href: "#contact" },
 ];
 
 export default function Footer() {
   return (
-    <footer className="border-t" style={{ borderColor: "var(--border)", background: "var(--bg-elev)", color: "var(--ink)" }}>
-      <div className="page-container grid gap-10 pt-16 pb-10 md:grid-cols-3 md:pt-20">
+    <footer className="overflow-hidden border-t border-[var(--border)]">
+      <div className="page-container grid gap-10 pt-16 md:grid-cols-3">
         <div>
-          <p className="font-display text-xl font-semibold tracking-tight">
-            Sabin.
-          </p>
-          <p className="mt-3 text-sm opacity-70">
-            AI Engineer &amp;
-            <br />
-            Full-Stack Developer.
-          </p>
+          <p className="label-mono">Get in touch</p>
+          <a
+            href={`mailto:${LINKS.email}`}
+            className="mt-3 inline-flex items-center gap-1.5 text-lg font-semibold text-[var(--ink)] hover:text-[var(--accent)]"
+          >
+            {LINKS.email} <ArrowUpRight className="h-4 w-4" />
+          </a>
         </div>
-
         <div>
-          <p className="text-sm opacity-60">Explore</p>
-          <ul className="mt-4 flex max-w-xs flex-wrap gap-x-6 gap-y-3">
-            {explore.map((link) => (
-              <li key={link.name}>
-                <a
-                  href={link.href}
-                  className="font-display font-medium hover:underline"
-                >
-                  {link.name}
+          <p className="label-mono">Explore</p>
+          <ul className="mt-3 flex flex-wrap gap-x-6 gap-y-2">
+            {explore.map((l) => (
+              <li key={l.name}>
+                <a href={l.href} className="nav-link">
+                  <span className="nav-link__roll" data-text={l.name}>
+                    {l.name}
+                  </span>
                 </a>
               </li>
             ))}
           </ul>
         </div>
-
-        <div>
-          <p className="text-sm opacity-60">Get in touch</p>
-          <a
-            href="mailto:sabinmsp@gmail.com"
-            className="font-display mt-4 inline-flex items-center gap-1.5 font-medium hover:underline"
-          >
-            sabinmsp@gmail.com
-            <ArrowUpRight className="h-4 w-4" />
-          </a>
-          <div className="mt-3 flex gap-5 text-sm">
-            <a
-              href="https://github.com/Sabinmsp"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:underline"
-            >
-              GitHub
+        <div className="flex flex-col gap-2 md:items-end">
+          <div className="flex gap-6">
+            <a href={LINKS.github} target="_blank" rel="noopener noreferrer" className="nav-link">
+              <span className="nav-link__roll" data-text="GitHub">GitHub</span>
             </a>
-            <a
-              href="https://www.linkedin.com/in/sabin-pradhan-652b333b6/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:underline"
-            >
-              LinkedIn
+            <a href={LINKS.linkedin} target="_blank" rel="noopener noreferrer" className="nav-link">
+              <span className="nav-link__roll" data-text="LinkedIn">LinkedIn</span>
             </a>
           </div>
-          <p className="mt-5 text-xs opacity-50">
-            © {new Date().getFullYear()} Sabin Pradhan
-          </p>
+          <a href="#top" className="muted mt-2 inline-flex items-center gap-1.5 text-sm hover:text-[var(--ink)]">
+            Back to top <ArrowUp className="h-4 w-4" />
+          </a>
         </div>
       </div>
 
-      <div className="page-container flex flex-wrap items-end justify-between gap-4 pb-12">
-        <p className="muted text-sm">
-          Thanks for scrolling.
-        </p>
-        <a
-          href="#top"
-          className="inline-flex items-center gap-2 text-sm hover:underline"
-        >
-          Back to top
-          <ArrowUp className="h-4 w-4" />
-        </a>
-      </div>
+      {/* Giant wordmark that rises into view */}
+      <motion.p
+        aria-hidden
+        className="footer-wordmark"
+        initial={{ y: "40%", opacity: 0 }}
+        whileInView={{ y: "0%", opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
+      >
+        Sabin Pradhan
+      </motion.p>
+      <p className="page-container muted pb-6 text-xs">
+        © {new Date().getFullYear()} Sabin Pradhan · Darwin, NT
+      </p>
     </footer>
   );
 }

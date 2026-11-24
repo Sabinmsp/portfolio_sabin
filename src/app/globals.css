@@ -832,3 +832,178 @@ html.lenis body {
   color: var(--ink);
   text-decoration-color: var(--accent);
 }
+
+/* ——— Reference-style system: heavy uppercase display type ——— */
+.mega-title {
+  font-family: var(--font-archivo-black), var(--font-display);
+  font-weight: 400;
+  text-transform: uppercase;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  line-height: 0.9;
+  font-size: clamp(3.2rem, 10vw, 9.5rem);
+}
+
+/* Top bar */
+.nav-bar {
+  transition: background-color 0.3s ease, border-color 0.3s ease, backdrop-filter 0.3s ease;
+  border-bottom: 1px solid transparent;
+}
+
+.nav-bar--scrolled {
+  background: color-mix(in srgb, var(--bg) 78%, transparent);
+  backdrop-filter: blur(12px);
+  border-bottom-color: var(--border);
+}
+
+.nav-link {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+/* Text rolls up to reveal a copy of itself on hover */
+.nav-link:has(.nav-link__roll) {
+  overflow: hidden;
+  height: 1.3em;
+  line-height: 1.3;
+  vertical-align: middle;
+}
+
+.nav-link__roll {
+  position: relative;
+  display: inline-block;
+}
+
+.nav-link__roll::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 100%;
+  color: var(--accent);
+}
+
+.nav-link__roll,
+.nav-link__roll::after {
+  transition: transform 0.35s cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+.nav-link:hover .nav-link__roll {
+  transform: translateY(-100%);
+}
+
+.nav-link:hover .nav-link__roll::after {
+  transform: translateY(0);
+}
+
+/* Big scrolling band */
+.marquee-band {
+  overflow: hidden;
+  border-block: 1px solid var(--border);
+  padding-block: 1.4rem;
+}
+
+.marquee-word {
+  font-family: var(--font-archivo-black), var(--font-display);
+  text-transform: uppercase;
+  font-size: clamp(2.2rem, 6vw, 5.5rem);
+  line-height: 1;
+  color: var(--ink);
+  white-space: nowrap;
+  padding-inline: 2rem;
+  transition: color 0.2s ease;
+}
+
+.marquee-word--outline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--ink);
+}
+
+.marquee-word:hover {
+  color: var(--accent);
+  -webkit-text-stroke-color: var(--accent);
+}
+
+.marquee-star {
+  color: var(--accent);
+  font-size: clamp(1.4rem, 3vw, 2.6rem);
+}
+
+/* Giant footer wordmark */
+.footer-wordmark {
+  font-family: var(--font-archivo-black), var(--font-display);
+  text-transform: uppercase;
+  color: var(--ink);
+  white-space: nowrap;
+  text-align: center;
+  line-height: 0.85;
+  letter-spacing: -0.02em;
+  font-size: 10.6vw;
+  margin-top: 4rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Project list in the systems section */
+.sys-tab__name {
+  font-family: var(--font-archivo-black), var(--font-display);
+  text-transform: uppercase;
+  font-size: 1rem;
+  letter-spacing: 0;
+  color: var(--text-muted);
+  transition: color 0.2s ease, transform 0.25s ease;
+  display: inline-block;
+}
+
+.sys-tab:hover .sys-tab__name {
+  color: var(--ink);
+  transform: translateX(4px);
+}
+
+.sys-tab--active {
+  background: transparent;
+  border: 2px solid transparent;
+  background:
+    linear-gradient(var(--bg), var(--bg)) padding-box,
+    linear-gradient(90deg, var(--accent), #3ee0c8, #7a9cff) border-box;
+}
+
+.sys-tab--active .sys-tab__name {
+  color: var(--ink);
+}
+
+/* Lab rows slide and light up on hover */
+.lab-row > h3 {
+  transition: color 0.25s ease, transform 0.3s ease;
+}
+
+.lab-row:hover > h3 {
+  color: var(--accent);
+  transform: translateX(6px);
+}
+
+/* Buttons and chips follow the same uppercase voice */
+.btn-ink {
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.ask-chip:hover {
+  border-color: transparent;
+  background:
+    linear-gradient(var(--bg-card), var(--bg-card)) padding-box,
+    linear-gradient(90deg, var(--accent), #3ee0c8, #7a9cff) border-box;
+  color: var(--ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-link__roll,
+  .nav-link__roll::after {
+    transition: none;
+  }
+}

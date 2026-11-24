@@ -127,11 +127,8 @@ export default function Assistant() {
     <section id="ask" className="section-y">
       <div className="page-container">
         <SectionHeader
-          title={
-            <>
-              Ask my guide
-            </>
-          }
+          index="03"
+          title="Ask me"
           aside={<>Questions about my work, answered only from verified notes. It runs in your browser and sends nothing anywhere.</>}
         />
 

@@ -32,7 +32,7 @@ function go(id: string) {
 
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <Reveal className="grid gap-3 border-t border-[var(--border)] py-8 md:grid-cols-[14rem_1fr] md:gap-10">
+    <Reveal className="lab-row grid gap-3 border-t border-[var(--border)] py-8 md:grid-cols-[14rem_1fr] md:gap-10">
       <h3 className="label-mono pt-1">{label}</h3>
       <div>{children}</div>
     </Reveal>
@@ -46,7 +46,7 @@ export default function Lab() {
   return (
     <section id="lab" className="section-y">
       <div className="page-container">
-        <SectionHeader title="Inside the lab" aside={<>Focus, delivery and how I work.</>} />
+        <SectionHeader index="02" title="The lab" aside="Focus, delivery and how I work." />
 
         <div className="border-b border-[var(--border)]">
           <Row label="Focus">
