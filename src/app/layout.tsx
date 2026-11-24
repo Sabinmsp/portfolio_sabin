@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google";
+import { Inter, Space_Grotesk, Archivo_Black } from "next/font/google";
 import ThemeProvider from "@/components/ThemeProvider";
 import "./globals.css";
 
@@ -15,9 +15,11 @@ const spaceGrotesk = Space_Grotesk({
   display: "swap",
 });
 
-const jetbrainsMono = JetBrains_Mono({
+// Heavy display face for the giant hero headline only.
+const archivoBlack = Archivo_Black({
+  weight: "400",
   subsets: ["latin"],
-  variable: "--font-jetbrains-mono",
+  variable: "--font-archivo-black",
   display: "swap",
 });
 
@@ -42,7 +44,7 @@ export default function RootLayout({
     <html
       lang="en"
       data-theme="dark"
-      className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`}
+      className={`${inter.variable} ${spaceGrotesk.variable} ${archivoBlack.variable}`}
       suppressHydrationWarning
     >
       <head>
