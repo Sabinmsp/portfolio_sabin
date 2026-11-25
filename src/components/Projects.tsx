@@ -23,11 +23,11 @@ const PROJECTS: Project[] = [
   { id: "signbridge", name: "SignBridge", line: "English to Auslan signs", tag: "Code Fair 2026", href: "https://github.com/Sabinmsp/coding_project_auslan", img: "/projects/signbridge.jpg", color: "#c8f560" },
   { id: "postie", name: "Postie Coffee", line: "Café website + ordering", tag: "Client · live", href: "https://www.postiecoffee.com.au/", img: "/projects/postie.jpg", color: "#f5c542" },
   { id: "ndis", name: "NDIS Provider", line: "Client website", tag: "Client · live", href: "https://sweet-care-virid.vercel.app/", img: "/projects/ndis.jpg", color: "#7ad9c5" },
-  { id: "careeros", name: "CareerOS", line: "AI job-fit analysis", tag: "MVP", href: "https://github.com/Sabinmsp/careeros", cover: { word: "Job fit", sub: "profile + job ad → plan" }, color: "#8fa8ff" },
+  { id: "careeros", name: "CareerOS", line: "AI job-fit analysis", tag: "MVP", href: "https://github.com/Sabinmsp/careeros", img: "/projects/careeros.jpg", color: "#8fa8ff" },
   { id: "gym", name: "Gym Coach AI", line: "RAG fitness coach", tag: "Build", href: "https://github.com/Sabinmsp/gym-ai-coach", img: "/projects/gym.jpg", color: "#ff8a65" },
-  { id: "triage", name: "Housing Triage", line: "AI repair ranking", tag: "Team", href: "https://github.com/Sabinmsp/try-house", cover: { word: "Safety first", sub: "intake → read → rank" }, color: "#ff6b9a" },
-  { id: "qlora", name: "Qwen3-14B", line: "QLoRA on one GPU", tag: "Experiment", href: "https://github.com/Sabinmsp", cover: { word: "14B", sub: "4-bit · LoRA adapters" }, color: "#b98cff" },
-  { id: "support", name: "Support Agent", line: "RAG agent with tools", tag: "Team", href: "https://github.com/sidskarkii/Capstone-Final", cover: { word: "RAG", sub: "FastAPI · LangChain" }, color: "#5cc8ff" },
+  { id: "triage", name: "Housing Triage", line: "AI repair ranking", tag: "Team", href: "https://github.com/Sabinmsp/try-house", img: "/projects/triage.jpg", color: "#ff6b9a" },
+  { id: "qlora", name: "Qwen3-14B", line: "QLoRA on one GPU", tag: "Experiment", href: "https://github.com/Sabinmsp", img: "/projects/qlora.jpg", color: "#b98cff" },
+  { id: "support", name: "Support Agent", line: "RAG agent with tools", tag: "Team", href: "https://github.com/sidskarkii/Capstone-Final", img: "/projects/support.jpg", color: "#5cc8ff" },
 ];
 
 function Folder({ p, i, flash }: { p: Project; i: number; flash: boolean }) {
