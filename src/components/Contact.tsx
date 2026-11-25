@@ -168,8 +168,7 @@ export default function Contact() {
             talk
           </h2>
           <p className="muted mt-7 max-w-md text-lg leading-relaxed">
-            Hiring for an AI or full-stack role, or need something built? My
-            inbox is open and I reply within a few days.
+            Open to AI and full-stack roles.
           </p>
 
           <div className="mt-9 flex flex-wrap items-center gap-3">

@@ -129,7 +129,7 @@ export default function Assistant() {
         <SectionHeader
           index="03"
           title="Ask me"
-          aside={<>Questions about my work, answered only from verified notes. It runs in your browser and sends nothing anywhere.</>}
+          aside="Answers only from verified notes."
         />
 
         <div className="panel grid lg:grid-cols-[1fr_20rem]">
@@ -211,7 +211,7 @@ export default function Assistant() {
           <aside className="border-t p-5 lg:border-t-0 lg:border-l" style={{ borderColor: "var(--border)" }}>
             <p className="label-mono">Try asking</p>
             <div className="mt-3 flex flex-wrap gap-2 lg:flex-col lg:items-start">
-              {SUGGESTED.map((q) => (
+              {SUGGESTED.slice(0, 3).map((q) => (
                 <button key={q} type="button" onClick={() => ask(q)} className="ask-chip text-left">
                   {q}
                 </button>

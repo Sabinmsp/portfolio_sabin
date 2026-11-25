@@ -1,12 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import Image from "next/image";
 import { AnimatePresence, motion, useInView, useReducedMotion } from "framer-motion";
-import { ArrowUpRight, MessageCircle, Pause, Play } from "lucide-react";
+import { ArrowUpRight, Pause, Play } from "lucide-react";
 import { SectionHeader } from "./Reveal";
 import {
-  askAssistant,
   otherWork,
   systems,
   type System,
@@ -309,122 +307,42 @@ export default function Systems() {
 
                 <div className="mt-6 hidden md:block">
                   <Diagram system={system} active={active} onSelect={pick} />
-                  <p className="muted mt-2 text-xs">
-                    Tip: use ← and → to step through the pipeline.
-                  </p>
                 </div>
                 <div className="mt-6 md:hidden">
                   <StepList system={system} active={active} onSelect={pick} />
                 </div>
 
-                <div className="mt-6 grid gap-5 md:grid-cols-[1.3fr_1fr]">
-                  {/* Selected node */}
-                  <div
-                    className="hidden rounded-2xl border p-5 md:block"
-                    style={{ borderColor: "var(--border)", background: "var(--bg-elev)" }}
-                    aria-live="polite"
-                  >
-                    <AnimatePresence mode="wait">
-                      <motion.div
-                        key={node.id}
-                        initial={{ opacity: 0, x: 10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -10 }}
-                        transition={{ duration: 0.25 }}
-                      >
-                        <p className="label-mono">
-                          Step {system.tour.indexOf(node.id) + 1} of {system.tour.length}
-                          {node.mine ? " · my stage" : ""}
-                        </p>
-                        <p className="heading mt-2 text-xl">{node.label}</p>
-                        <p className="mt-2 leading-relaxed">{node.detail}</p>
-                        {node.tech?.length ? (
-                          <div className="mt-4 flex flex-wrap gap-1.5">
-                            {node.tech.map((t) => (
-                              <span key={t} className="chip">
-                                {t}
-                              </span>
-                            ))}
-                          </div>
-                        ) : null}
-                      </motion.div>
-                    </AnimatePresence>
-                  </div>
-
-                  {/* Facts */}
-                  <div>
-                    <p className="leading-relaxed">{system.summary}</p>
-                    <dl className="mt-5 grid grid-cols-3 gap-3">
-                      {system.facts.map((f) => (
-                        <div key={f.label}>
-                          <dt className="sr-only">{f.label}</dt>
-                          <dd>
-                            <span className="heading block text-xl">{f.value}</span>
-                            <span className="muted mt-1 block text-xs leading-snug">{f.label}</span>
-                          </dd>
-                        </div>
-                      ))}
-                    </dl>
-                    {system.note ? (
-                      <p className="muted mt-5 border-l pl-3 text-sm" style={{ borderColor: "var(--border-strong)" }}>
-                        {system.note}
-                      </p>
-                    ) : null}
-                    <button
-                      type="button"
-                      onClick={() => {
-                        askAssistant(`Tell me about ${system.name}`);
-                        document.getElementById("ask")?.scrollIntoView({ behavior: "smooth" });
-                      }}
-                      className="muted mt-5 inline-flex items-center gap-2 text-sm hover:text-[var(--ink)]"
+                {/* The selected step, in one or two lines */}
+                <div className="mt-5 hidden min-h-[3.5rem] md:block" aria-live="polite">
+                  <AnimatePresence mode="wait">
+                    <motion.p
+                      key={node.id}
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -6 }}
+                      transition={{ duration: 0.25 }}
+                      className="max-w-3xl leading-relaxed"
                     >
-                      <MessageCircle className="h-4 w-4" />
-                      Ask the assistant about {system.name}
-                    </button>
-                  </div>
+                      <span className="heading">{node.label}.</span>{" "}
+                      <span className="muted">{node.detail}</span>
+                    </motion.p>
+                  </AnimatePresence>
                 </div>
-
-                {system.media ? (
-                  <figure className="mt-6 overflow-hidden rounded-2xl border" style={{ borderColor: "var(--border)" }}>
-                    <Image
-                      src={system.media.src}
-                      alt={system.media.alt}
-                      width={system.media.width}
-                      height={system.media.height}
-                      sizes="(min-width: 1024px) 900px, 100vw"
-                      className="h-auto w-full"
-                    />
-                    <figcaption className="muted border-t px-4 py-2 text-xs" style={{ borderColor: "var(--border)" }}>
-                      The running app: {system.media.alt}.
-                    </figcaption>
-                  </figure>
-                ) : null}
               </motion.div>
             </AnimatePresence>
           </div>
         </div>
 
         {/* Other work */}
-        <div className="mt-10 grid gap-3 md:grid-cols-2">
+        <ul className="mt-8 flex flex-wrap gap-x-8 gap-y-2 text-sm">
           {otherWork.map((w) => (
-            <a
-              key={w.name}
-              href={w.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="panel group flex items-start justify-between gap-4 p-5 transition-colors hover:border-[var(--accent-line)]"
-            >
-              <span>
-                <span className="tag">{w.tag}</span>
-                <span className="heading mt-3 block text-xl">{w.name}</span>
-                <span className="muted mt-1 block text-[15px]">{w.detail}</span>
-              </span>
-              <span className="icon-box shrink-0" aria-hidden>
-                <ArrowUpRight className="h-4 w-4" />
-              </span>
-            </a>
+            <li key={w.name}>
+              <a href={w.href} target="_blank" rel="noopener noreferrer" className="link-quiet inline-flex items-center gap-1">
+                {w.name} <ArrowUpRight className="h-3.5 w-3.5" />
+              </a>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     </section>
   );

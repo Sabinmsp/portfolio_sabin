@@ -4,17 +4,10 @@ import { motion } from "framer-motion";
 import { ArrowUp, ArrowUpRight } from "lucide-react";
 import { LINKS } from "@/data/systems";
 
-const explore = [
-  { name: "Projects", href: "#projects" },
-  { name: "Lab", href: "#lab" },
-  { name: "Ask me", href: "#ask" },
-  { name: "Contact", href: "#contact" },
-];
-
 export default function Footer() {
   return (
     <footer className="overflow-hidden border-t border-[var(--border)]">
-      <div className="page-container grid gap-10 pt-16 md:grid-cols-3">
+      <div className="page-container grid gap-10 pt-16 md:grid-cols-2">
         <div>
           <p className="label-mono">Get in touch</p>
           <a
@@ -23,20 +16,6 @@ export default function Footer() {
           >
             {LINKS.email} <ArrowUpRight className="h-4 w-4" />
           </a>
-        </div>
-        <div>
-          <p className="label-mono">Explore</p>
-          <ul className="mt-3 flex flex-wrap gap-x-6 gap-y-2">
-            {explore.map((l) => (
-              <li key={l.name}>
-                <a href={l.href} className="nav-link">
-                  <span className="nav-link__roll" data-text={l.name}>
-                    {l.name}
-                  </span>
-                </a>
-              </li>
-            ))}
-          </ul>
         </div>
         <div className="flex flex-col gap-2 md:items-end">
           <div className="flex gap-6">

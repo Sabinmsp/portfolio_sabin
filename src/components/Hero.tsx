@@ -116,8 +116,7 @@ export default function Hero() {
           {...rise(0.7)}
           className="order-2 max-w-[19rem] text-[13px] leading-relaxed font-semibold tracking-wide text-[var(--ink)] uppercase md:order-1 md:text-sm"
         >
-          AI engineer &amp; full-stack developer building grounded AI systems
-          and real products for clients.
+          AI engineer &amp; full-stack developer.
           <span className="muted mt-3 flex items-center gap-2 text-xs font-medium normal-case tracking-normal">
             <span className="status-dot" aria-hidden /> Open to roles · Darwin, NT
           </span>
@@ -182,14 +181,6 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      <motion.ul
-        {...rise(1)}
-        className="page-container muted mt-14 flex flex-wrap justify-center gap-x-8 gap-y-2 text-center text-[13px]"
-      >
-        <li>Live sites for Postie Coffee and an NDIS provider</li>
-        <li>CDU IT Code Fair 2026 · SignBridge</li>
-        <li>Master of IT (AI), Charles Darwin University</li>
-      </motion.ul>
     </section>
   );
 }
