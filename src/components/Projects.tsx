@@ -6,37 +6,14 @@ import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { SectionHeader } from "./Reveal";
 
-type Project = {
-  id: string;
-  name: string;
-  /** One short line. Keep it short. */
-  line: string;
-  tag: string;
-  href: string;
-  /** A real screenshot, or a typographic cover when there is none. */
-  img?: string;
-  cover?: { word: string; sub: string };
-  color: string;
-};
-
-const PROJECTS: Project[] = [
-  { id: "signbridge", name: "SignBridge", line: "English to Auslan signs", tag: "Code Fair 2026", href: "https://github.com/Sabinmsp/coding_project_auslan", img: "/projects/signbridge.jpg", color: "#c8f560" },
-  { id: "postie", name: "Postie Coffee", line: "Café website + ordering", tag: "Client · live", href: "https://www.postiecoffee.com.au/", img: "/projects/postie.jpg", color: "#f5c542" },
-  { id: "ndis", name: "NDIS Provider", line: "Client website", tag: "Client · live", href: "https://sweet-care-virid.vercel.app/", img: "/projects/ndis.jpg", color: "#7ad9c5" },
-  { id: "careeros", name: "CareerOS", line: "AI job-fit analysis", tag: "MVP", href: "https://github.com/Sabinmsp/careeros", img: "/projects/careeros.jpg", color: "#8fa8ff" },
-  { id: "gym", name: "Gym Coach AI", line: "RAG fitness coach", tag: "Build", href: "https://github.com/Sabinmsp/gym-ai-coach", img: "/projects/gym.jpg", color: "#ff8a65" },
-  { id: "triage", name: "Housing Triage", line: "AI repair ranking", tag: "Team", href: "https://github.com/Sabinmsp/try-house", img: "/projects/triage.jpg", color: "#ff6b9a" },
-  { id: "qlora", name: "Qwen3-14B", line: "QLoRA on one GPU", tag: "Experiment", href: "https://github.com/Sabinmsp", img: "/projects/qlora.jpg", color: "#b98cff" },
-  { id: "support", name: "Support Agent", line: "RAG agent with tools", tag: "Team", href: "https://github.com/sidskarkii/Capstone-Final", img: "/projects/support.jpg", color: "#5cc8ff" },
-];
+import { projects as PROJECTS, type Project } from "@/data/systems";
 
 function Folder({ p, i, flash }: { p: Project; i: number; flash: boolean }) {
+  const Tag = p.href ? motion.a : motion.div;
   return (
-    <motion.a
+    <Tag
       id={`project-${p.id}`}
-      href={p.href}
-      target="_blank"
-      rel="noopener noreferrer"
+      {...(p.href ? { href: p.href, target: "_blank", rel: "noopener noreferrer" } : { tabIndex: 0 })}
       className={`folder ${flash ? "folder--flash" : ""}`}
       style={{ "--folder": p.color } as React.CSSProperties}
       initial={{ opacity: 0, y: 40 }}
@@ -64,10 +41,10 @@ function Folder({ p, i, flash }: { p: Project; i: number; flash: boolean }) {
         <span className="folder__tag">{p.tag}</span>
         <span className="folder__name">{p.name}</span>
         <span className="folder__line">
-          {p.line} <ArrowUpRight className="folder__arrow h-4 w-4" />
+          {p.line} {p.href ? <ArrowUpRight className="folder__arrow h-4 w-4" /> : <span className="text-xs opacity-70">Private</span>}
         </span>
       </span>
-    </motion.a>
+    </Tag>
   );
 }
 

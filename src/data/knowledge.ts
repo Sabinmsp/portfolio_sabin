@@ -28,32 +28,32 @@ export const NOTES: Note[] = [
     id: "ai-systems",
     keywords: ["systems", "built", "build", "llm", "machine", "learning", "models", "portfolio", "list", "all"],
     answer:
-      "Five AI systems, each with its architecture on this page: SignBridge (English to recorded Auslan signs, CDU IT Code Fair 2026), CareerOS (Claude analysis with a deterministic fallback), a housing repair triage pipeline (team project; he built intake, LLM extraction and ranking), Gym Coach AI (RAG over a user's profile) and a Qwen3-14B QLoRA fine-tune on one GPU.",
+      "SignBridge (English to recorded Auslan signs, CDU IT Code Fair 2026), Agent Office (a team of AI agents that plan, work and get checked), the QX lead finder with its own MCP server for Claude, Gym Coach AI (RAG over a user's profile) and a Qwen3-14B QLoRA fine-tune on one GPU. Plus client sites for Postie Coffee and an NDIS provider.",
     sources: [
       { kind: "system", id: "signbridge", label: "SignBridge" },
-      { kind: "system", id: "careeros", label: "CareerOS" },
-      { kind: "system", id: "triage", label: "Housing triage" },
+      { kind: "system", id: "agent-office", label: "Agent Office" },
+      { kind: "system", id: "qx", label: "QX Lead Finder" },
     ],
   },
   {
     id: "production",
     keywords: ["production", "experience", "professional", "client", "clients", "real", "live", "deployed", "shipped", "freelance", "delivered", "industry", "job"],
     answer:
-      "Client work in Darwin: Postie Coffee's website is live, and he built its full ordering stack behind a switch (server-side pricing, Supabase with row-level security, a staff board from New to Ready, order tracking and ESC/POS receipt printing). It stays off until the owner decides on online ordering. He also designed, built and deployed an NDIS provider's website from the client's brief. CareerOS is a deployed MVP, though it has no real users yet.",
+      "Client work in Darwin: Postie Coffee's website is live, and he built its full ordering stack behind a switch (server-side pricing, Supabase with row-level security, a staff board from New to Ready, order tracking and ESC/POS receipt printing). It stays off until the owner decides on online ordering. He also designed, built and deployed an NDIS provider's website from the client's brief, and built a lead finder with an MCP server for QX Media.",
     sources: [
       { kind: "system", id: "postie", label: "Postie system" },
       { kind: "link", href: "https://sweet-care-virid.vercel.app/", label: "NDIS site" },
-      { kind: "system", id: "careeros", label: "CareerOS" },
+      { kind: "system", id: "qx", label: "QX Lead Finder" },
     ],
   },
   {
     id: "automation",
-    keywords: ["automation", "automate", "automated", "pipeline", "workflow", "agent", "agents", "triage", "process"],
+    keywords: ["automation", "automate", "automated", "pipeline", "workflow", "agent", "agents", "process", "mcp", "leads", "lead", "office"],
     answer:
-      "The housing repair triage pipeline. It reads free-text repair reports and ranks them safety first, then urgency, then earliest report. He built intake, the extraction stage (the only model call: structured output validated with Pydantic, retry once, then flag for a human) and the ranking stage, a pure function that also writes a coordinator explanation and a tenant SMS. CareerOS is another end-to-end pipeline, from input to a saved analysis.",
+      "Two. Agent Office: a manager agent splits your request into jobs, the team works on them in parallel, a QA agent checks every output, and anything going out waits for your approval. And the QX lead finder: it searches Google Places three times a day, scores and saves leads in Postgres, sends a Telegram summary, and has an MCP server so Claude can find and search leads on request. It never contacts a business itself.",
     sources: [
-      { kind: "system", id: "triage", label: "Triage pipeline" },
-      { kind: "system", id: "careeros", label: "CareerOS" },
+      { kind: "system", id: "agent-office", label: "Agent Office" },
+      { kind: "system", id: "qx", label: "QX Lead Finder" },
     ],
   },
   {
@@ -67,7 +67,7 @@ export const NOTES: Note[] = [
     id: "hire",
     keywords: ["hire", "why", "should", "strengths", "strength", "good", "fit", "recommend", "stand", "out", "different"],
     answer:
-      "The evidence on this site: he ships to real clients (Postie Coffee, an NDIS provider); he builds AI that is checked rather than trusted, with validated outputs, verified quotes and deterministic fallbacks; he tests his work (88 JS tests plus browser suites on SignBridge, 23 on CareerOS); and SignBridge earned recognition at the CDU IT Code Fair 2026. He is studying a Master of IT in AI at CDU and is open to AI engineering roles.",
+      "The evidence on this site: he ships to real clients (Postie Coffee, an NDIS provider); he builds AI that is checked rather than trusted, with validated outputs, verified quotes and deterministic fallbacks; he tests his work (88 JS tests plus browser suites on SignBridge); and SignBridge earned recognition at the CDU IT Code Fair 2026. He is studying a Master of IT in AI at CDU and is open to AI engineering roles.",
     sources: [
       { kind: "link", href: "#lab", label: "Lab dashboard" },
       { kind: "system", id: "signbridge", label: "SignBridge" },
@@ -80,7 +80,7 @@ export const NOTES: Note[] = [
     answer:
       "SignBridge turns spoken, typed or PDF English into recorded Auslan signs on a 2D figure. It uses 3,215 signs extracted with MediaPipe and fingerspells words with no sign. On 30 test sentences it signed 83.9% of words. For PDFs it picks key points, with an optional Claude rewrite whose facts are re-checked against the PDF. It is an accessibility prototype, not a translator, and hasn't been evaluated with Deaf viewers yet.",
     sources: [
-      { kind: "system", id: "signbridge", label: "SignBridge diagram" },
+      { kind: "system", id: "signbridge", label: "SignBridge" },
       { kind: "link", href: "https://github.com/Sabinmsp/coding_project_auslan", label: "Code" },
     ],
   },
@@ -90,28 +90,8 @@ export const NOTES: Note[] = [
     answer:
       "Postie Coffee is a Darwin café. Its website is live. The ordering system is built: customers order, the server re-prices every item from the database, orders land in Supabase, and staff move them from New to Accepted, Preparing, Ready and Completed, with tracking links and ESC/POS receipt printing. One switch keeps ordering off until the owner chooses to launch it.",
     sources: [
-      { kind: "system", id: "postie", label: "Postie diagram" },
+      { kind: "system", id: "postie", label: "Postie Coffee" },
       { kind: "link", href: "https://www.postiecoffee.com.au/", label: "Live site" },
-    ],
-  },
-  {
-    id: "careeros",
-    keywords: ["careeros", "career", "job", "resume", "employability", "gap", "score", "claude", "fallback"],
-    answer:
-      "CareerOS compares a student's profile with a real job description and returns a match score with evidence on both sides, ranked missing skills, a recommended project and a seven-day plan. Claude does the analysis under a JSON Schema, Zod re-validates it, and any failure falls back to a deterministic engine, so users never see an error page. It's a deployed MVP with 23 tests and no real users yet.",
-    sources: [
-      { kind: "system", id: "careeros", label: "CareerOS diagram" },
-      { kind: "link", href: "https://github.com/Sabinmsp/careeros", label: "Code" },
-    ],
-  },
-  {
-    id: "triage",
-    keywords: ["housing", "repair", "maintenance", "tenant", "ranking", "rank", "safety", "team", "teamwork"],
-    answer:
-      "A team project that ranks NT public housing repair reports, safety first. His stages: intake, extraction (the only model call, which returns quoted facts, never scores) and ranking (a pure sort with a reasoning trace for every job). The rule is: the model reads, code decides.",
-    sources: [
-      { kind: "system", id: "triage", label: "Triage diagram" },
-      { kind: "link", href: "https://github.com/Sabinmsp/try-house", label: "His stages" },
     ],
   },
   {
@@ -119,7 +99,7 @@ export const NOTES: Note[] = [
     keywords: ["qwen", "qlora", "lora", "fine", "tuning", "finetune", "fine-tuning", "gpu", "peft", "trl", "ultrachat", "training", "train"],
     answer:
       "He fine-tuned Qwen3-14B on UltraChat with 4-bit QLoRA: the base model is loaded in 4-bit and frozen, and only small LoRA adapters are trained with PEFT and TRL. That's what fits a 14-billion-parameter model on a single GPU.",
-    sources: [{ kind: "system", id: "qlora", label: "QLoRA diagram" }],
+    sources: [{ kind: "system", id: "qlora", label: "Qwen3-14B" }],
   },
   {
     id: "gym",
@@ -127,7 +107,7 @@ export const NOTES: Note[] = [
     answer:
       "Gym Coach AI is a fitness coach whose RAG layer tailors answers to each user's profile, with vector search in memory or in Qdrant, switchable OpenAI or Ollama embeddings, a response cache and rate limiting. Built with Next.js and TypeScript.",
     sources: [
-      { kind: "system", id: "gym", label: "Gym Coach diagram" },
+      { kind: "system", id: "gym", label: "Gym Coach AI" },
       { kind: "link", href: "https://github.com/Sabinmsp/gym-ai-coach", label: "Code" },
     ],
   },

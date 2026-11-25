@@ -26,7 +26,7 @@ const archivoBlack = Archivo_Black({
 export const metadata: Metadata = {
   title: "Sabin Pradhan | AI Engineer & Full-Stack Developer",
   description:
-    "Sabin Pradhan, AI Engineer and Full-Stack Developer in Darwin, NT. Explore interactive architectures of SignBridge, CareerOS, the Postie Coffee ordering system and more.",
+    "Sabin Pradhan, AI Engineer and Full-Stack Developer in Darwin, NT. Projects include SignBridge, Agent Office, an MCP lead finder and the Postie Coffee website.",
   openGraph: {
     title: "Sabin Pradhan | AI Engineer & Full-Stack Developer",
     description:
