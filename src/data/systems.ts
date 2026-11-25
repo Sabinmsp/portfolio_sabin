@@ -75,7 +75,7 @@ export const systems: System[] = [
     ],
     tour: ["in", "points", "claude", "plan", "lib", "spell", "fig"],
     links: [{ label: "Code", href: "https://github.com/Sabinmsp/coding_project_auslan" }],
-    media: { src: "/projects/signbridge-ui.png", alt: "SignBridge fingerspelling the word NAME on its 2D figure", width: 1200, height: 833 },
+    media: { src: "/projects/signbridge.jpg", alt: "SignBridge fingerspelling the word NAME on its 2D figure", width: 1200, height: 833 },
     note: "Accessibility prototype, not an Auslan translator. Nothing has yet been evaluated with Deaf viewers.",
   },
   {

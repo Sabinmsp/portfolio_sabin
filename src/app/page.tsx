@@ -1,7 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Marquee from "@/components/Marquee";
-import Systems from "@/components/Systems";
+import Projects from "@/components/Projects";
 import Lab from "@/components/Lab";
 import Assistant from "@/components/Assistant";
 import Contact from "@/components/Contact";
@@ -27,7 +27,7 @@ export default function Home() {
       <main>
         <Hero />
         <Marquee />
-        <Systems />
+        <Projects />
         <Lab />
         <Assistant />
         <Contact />
