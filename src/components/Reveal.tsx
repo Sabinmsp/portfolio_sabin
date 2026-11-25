@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import SplitText from "./SplitText";
 
 export default function Reveal({
   children,
@@ -47,21 +48,25 @@ export function SectionHeader({
     <div ref={ref} className="mb-12 md:mb-16">
       {index ? <p className="label-mono mb-4">({index})</p> : null}
       <motion.h2
-        className="mega-title overflow-hidden"
+        className="mega-title"
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, margin: "-80px" }}
         style={reduce ? undefined : { x }}
       >
-        <motion.span
-          className="block"
-          variants={{
-            hidden: { y: "105%" },
-            show: { y: "0%", transition: { duration: 1, ease: [0.22, 1, 0.36, 1] } },
-          }}
-        >
-          {title}
-        </motion.span>
+        {typeof title === "string" ? (
+          <SplitText text={title} />
+        ) : (
+          <motion.span
+            className="block"
+            variants={{
+              hidden: { y: "105%" },
+              show: { y: "0%", transition: { duration: 1, ease: [0.22, 1, 0.36, 1] } },
+            }}
+          >
+            {title}
+          </motion.span>
+        )}
       </motion.h2>
       {aside ? (
         <Reveal delay={0.15}>

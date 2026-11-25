@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import SplitText from "./SplitText";
 import { ArrowUp, ArrowUpRight } from "lucide-react";
 import { LINKS } from "@/data/systems";
 
@@ -33,16 +33,9 @@ export default function Footer() {
       </div>
 
       {/* Giant wordmark that rises into view */}
-      <motion.p
-        aria-hidden
-        className="footer-wordmark"
-        initial={{ y: "40%", opacity: 0 }}
-        whileInView={{ y: "0%", opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
-      >
-        Sabin Pradhan
-      </motion.p>
+      <p className="footer-wordmark">
+        <SplitText text="Sabin Pradhan" stagger={0.045} />
+      </p>
       <p className="page-container muted pb-6 text-xs">
         © {new Date().getFullYear()} Sabin Pradhan · Darwin, NT
       </p>

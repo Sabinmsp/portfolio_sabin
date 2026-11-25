@@ -240,7 +240,11 @@ export default function Systems() {
             className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1 lg:mx-0 lg:flex-col lg:gap-1 lg:overflow-visible lg:px-0"
           >
             {systems.map((s, i) => (
-              <button
+              <motion.button
+                initial={{ opacity: 0, x: -24 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{ duration: 0.6, delay: i * 0.07, ease: EASE }}
                 key={s.id}
                 role="tab"
                 type="button"
@@ -260,7 +264,7 @@ export default function Systems() {
                   className="hidden h-2 w-2 shrink-0 rounded-full lg:block"
                   style={{ background: s.id === sysId ? "var(--accent)" : "var(--border-strong)" }}
                 />
-              </button>
+              </motion.button>
             ))}
           </div>
 

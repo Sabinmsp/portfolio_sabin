@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import Reveal, { SectionHeader } from "./Reveal";
 import { openSystem } from "@/data/systems";
@@ -14,10 +15,20 @@ function go(id: string) {
 
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <Reveal className="lab-row grid gap-3 border-t border-[var(--border)] py-8 md:grid-cols-[14rem_1fr] md:gap-10">
-      <h3 className="label-mono pt-1">{label}</h3>
-      <div>{children}</div>
-    </Reveal>
+    <div className="lab-row relative grid gap-3 py-8 md:grid-cols-[14rem_1fr] md:gap-10">
+      <motion.span
+        aria-hidden
+        className="absolute inset-x-0 top-0 h-px origin-left bg-[var(--border-strong)]"
+        initial={{ scaleX: 0 }}
+        whileInView={{ scaleX: 1 }}
+        viewport={{ once: true, margin: "-40px" }}
+        transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
+      />
+      <Reveal>
+        <h3 className="label-mono pt-1">{label}</h3>
+      </Reveal>
+      <Reveal delay={0.12}>{children}</Reveal>
+    </div>
   );
 }
 

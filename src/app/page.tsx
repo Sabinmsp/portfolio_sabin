@@ -7,7 +7,7 @@ import Assistant from "@/components/Assistant";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import CommandPalette from "@/components/CommandPalette";
-import { ScrollProgress, SmoothScroll } from "@/components/Interactive";
+import { Cursor, ScrollProgress, SmoothScroll } from "@/components/Interactive";
 
 export default function Home() {
   return (
@@ -21,6 +21,7 @@ export default function Home() {
       </a>
       <SmoothScroll />
       <ScrollProgress />
+      <Cursor />
       <CommandPalette />
       <Navbar />
       <main>

@@ -11,6 +11,8 @@ import {
   useTransform,
 } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import SplitText from "./SplitText";
+import { Magnetic } from "./Interactive";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -97,17 +99,9 @@ export default function Hero() {
         className="hero-mega px-[3vw] text-center"
         style={reduce ? undefined : { x: titleX }}
       >
-        <span className="block overflow-hidden">
-          <motion.span
-            className="block"
-            initial={{ y: "105%" }}
-            animate={{ y: "0%" }}
-            transition={{ duration: 1.1, delay: 0.1, ease: EASE }}
-          >
-            Hi, I&rsquo;m <br className="md:hidden" />
-            Sabin
-          </motion.span>
-        </span>
+        <SplitText text="Hi, I’m" onView={false} delay={0.15} stagger={0.05} />{" "}
+        <br className="md:hidden" />
+        <SplitText text="Sabin" onView={false} delay={0.5} stagger={0.06} />
       </motion.h1>
 
       <div className="page-container relative grid items-center gap-8 md:grid-cols-[1fr_auto_1fr] md:gap-6">
@@ -172,9 +166,11 @@ export default function Hero() {
           {...rise(0.85)}
           className="order-3 flex flex-col items-start gap-4 md:items-end"
         >
-          <a href="#contact" className="pill-gradient">
-            Contact me
-          </a>
+          <Magnetic>
+            <a href="#contact" className="pill-gradient">
+              Contact me
+            </a>
+          </Magnetic>
           <a href="#projects" className="link-quiet inline-flex items-center gap-1.5 text-sm">
             See my work <ArrowRight className="h-3.5 w-3.5" />
           </a>
